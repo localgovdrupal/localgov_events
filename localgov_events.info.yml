@@ -5,4 +5,12 @@ type: module
 package: LocalGov Drupal
 
 dependencies:
+  # Contrib
+  - date_recur:date_recur
+  - date_recur_modular:date_recur_modular
+  - field_group:field_group
+  - inline_entity_form:inline_entity_form
+  # LocalGov Drupal
+  - localgov_core:localgov_core
+  - localgov_core:localgov_media
   - localgov_geo:localgov_geo

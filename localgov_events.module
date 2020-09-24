@@ -1,0 +1,103 @@
+<?php
+/**
+ * @file
+ * LocalGov Events module file.
+ */
+
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_modules_installed().
+ */
+function localgov_events_modules_installed($modules) {
+  // Configure optional fields.
+  $directory_page = in_array('localgov_directories_page', $modules);
+  $directory_venue = in_array('localgov_directories_venue', $modules);
+  if ($directory_page || $directory_venue) {
+    \Drupal::service('config.installer')->installOptionalConfig();
+    localgov_events_optional_fields_settings($directory_page, $directory_venue);
+  }
+}
+
+/**
+ * Configure form settings for optional provider and venue fields.
+ *
+ * @param bool $directory_page
+ *   If localgov_directories_page is (being) installed.
+ * @param bool $directory_venue
+ *   If localgov_directories_venue is (being) installed.
+ */
+function localgov_events_optional_fields_settings($directory_page, $directory_venue) {
+  if ($directory_page || $directory_venue) {
+
+    $form_display = \Drupal::entityTypeManager()
+      ->getStorage('entity_form_display')
+      ->load('node.localgov_event.default');
+    assert($form_display instanceof EntityFormDisplayInterface);
+    $view_display = \Drupal::entityTypeManager()
+      ->getStorage('entity_view_display')
+      ->load('node.localgov_event.default');
+    assert($view_display instanceof EntityViewDisplayInterface);
+    $group_location = $form_display->getThirdPartySetting('field_group', 'group_location');
+    $locations = $group_location['children'];
+
+    // Set display for localgov_event_venue field.
+    if ($directory_venue) {
+      if (!$form_display->getComponent('localgov_event_venue')) {
+        $form_display->setComponent('localgov_event_venue', [
+          'type' => 'entity_reference_autocomplete',
+          'region' => 'content',
+          'settings' => [
+            'match_operator' => 'CONTAINS',
+            'size' => '60',
+            'placeholder' => '',
+            'match_limit' => 10,
+          ],
+          'weight' => 11,
+        ])->save();
+        array_unshift($locations, 'localgov_event_venue');
+      }
+      if (!$view_display->getComponent('localgov_event_venue')) {
+        $view_display->setComponent('localgov_event_venue', [
+          'type' => 'entity_reference_label',
+          'region' => 'content',
+          'label' => 'inline',
+          'weight' => 5,
+        ])->save();
+      }
+    }
+
+
+    // Set display localgov_event_provider field.
+    if (!$form_display->getComponent('localgov_event_provider')) {
+      $form_display->setComponent('localgov_event_provider', [
+        'type' => 'entity_reference_autocomplete',
+        'region' => 'content',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'placeholder' => '',
+          'match_limit' => 10,
+        ],
+        'weight' => 10,
+      ])->save();
+      array_unshift($locations, 'localgov_event_provider');
+    }
+    if (!$view_display->getComponent('localgov_event_provider')) {
+      $view_display->setComponent('localgov_event_provider', [
+        'type' => 'entity_reference_label',
+        'region' => 'content',
+        'label' => 'inline',
+        'weight' => 4,
+      ])->save();
+    }
+
+
+
+    // Set grouped location fields.
+    $group_location['children'] = $locations;
+    $form_display->setThirdPartySetting('field_group', 'group_location', $group_location);
+    $form_display->save();
+  }
+}

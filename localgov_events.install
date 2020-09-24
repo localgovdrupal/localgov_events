@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * LocalGov Events install file.
+ */
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_install().
+ */
+function localgov_events_install() {
+
+  // Configure optional fields.
+  $directory_page = \Drupal::moduleHandler()->moduleExists('localgov_directories_page');
+  $directory_venue = \Drupal::moduleHandler()->moduleExists('localgov_directories_venue');
+  localgov_events_optional_fields_settings($directory_page, $directory_venue);
+
+  // Add default event price taxonomy terms.
+  $prices = [
+    'Free',
+    'Paid',
+  ];
+  foreach ($prices as $price) {
+    $term = Term::create(array(
+      'parent' => [],
+      'name' => $price,
+      'vid' => 'localgov_event_price',
+    ))->save();
+  }
+
+}

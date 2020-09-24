@@ -1,15 +1,17 @@
 {
-  "name": "localgovdrupal/localgov_events",
-  "description": "Events for LocalGov Drupal",
-  "type": "drupal-module",
-  "homepage": "https://github.com/localgovdrupal/localgov_events",
-  "license": "GPL-2.0-or-later",
-  "minimum-stability": "dev",
-  "require": {
-    "localgovdrupal/localgov_core": "dev-master",
-    "localgovdrupal/localgov_geo": "dev-master"
-  },
-  "require-dev": {
-    "localgovdrupal/localgov_directories": "dev-master"
-  }
+    "name": "localgovdrupal/localgov_events",
+    "description": "Events for LocalGov Drupal",
+    "type": "drupal-module",
+    "homepage": "https://github.com/localgovdrupal/localgov_events",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/date_recur": "^2.0",
+        "drupal/date_recur_modular": "^2.0",
+        "localgovdrupal/localgov_core": "dev-master",
+        "localgovdrupal/localgov_geo": "dev-master"
+    },
+    "require-dev": {
+        "localgovdrupal/localgov_directories": "dev-master"
+    }
 }
