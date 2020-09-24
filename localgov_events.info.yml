@@ -1,0 +1,8 @@
+name: LocalGov Events
+description: Provides events for LocalGov Drupal.
+core_version_requirement: ^8.9 || ^9
+type: module
+package: LocalGov Drupal
+
+dependencies:
+  - localgov_geo:localgov_geo
