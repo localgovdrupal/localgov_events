@@ -67,10 +67,15 @@ class EventPageTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('localgov_event_provider');
     $this->assertSession()->pageTextNotContains('localgov_event_venue');
 
-    // Check optional fields.
-    \Drupal::service('module_installer')->install(['localgov_directories_page', 'localgov_directories_venue']);
+    // Check optional provider field.
+    \Drupal::service('module_installer')->install(['localgov_directories_page']);
     $this->drupalGet('/admin/structure/types/manage/localgov_event/fields');
     $this->assertSession()->pageTextContains('localgov_event_provider');
+    $this->assertSession()->pageTextNotContains('localgov_event_venue');
+
+    // Check optional venue field.
+    \Drupal::service('module_installer')->install(['localgov_directories_venue']);
+    $this->drupalGet('/admin/structure/types/manage/localgov_event/fields');
     $this->assertSession()->pageTextContains('localgov_event_venue');
   }
 

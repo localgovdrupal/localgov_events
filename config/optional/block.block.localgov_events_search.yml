@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.localgov_events
+  module:
+    - views
+  theme:
+    - localgov_theme
+id: localgov_events_search
+theme: localgov_theme
+region: sidebar_first
+weight: -7
+provider: null
+plugin: 'views_exposed_filter_block:localgov_events-events_page'
+settings:
+  id: 'views_exposed_filter_block:localgov_events-events_page'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+visibility: {  }

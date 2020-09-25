@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.localgov_events_price
+  module:
+    - facets
+  theme:
+    - localgov_theme
+id: localgov_events_cost
+theme: localgov_theme
+region: sidebar_first
+weight: -5
+provider: null
+plugin: 'facet_block:localgov_events_price'
+settings:
+  id: 'facet_block:localgov_events_price'
+  label: 'Events cost'
+  provider: facets
+  label_display: '0'
+  block_id: localgov_events_cost
+visibility: {  }

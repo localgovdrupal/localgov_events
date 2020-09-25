@@ -68,7 +68,6 @@ function localgov_events_optional_fields_settings($directory_page, $directory_ve
       }
     }
 
-
     // Set display localgov_event_provider field.
     if (!$form_display->getComponent('localgov_event_provider')) {
       $form_display->setComponent('localgov_event_provider', [
@@ -92,8 +91,6 @@ function localgov_events_optional_fields_settings($directory_page, $directory_ve
         'weight' => 4,
       ])->save();
     }
-
-
 
     // Set grouped location fields.
     $group_location['children'] = $locations;

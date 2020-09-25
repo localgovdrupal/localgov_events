@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_form_mode.localgov_geo.inline
     - field.field.node.localgov_event.body
     - field.field.node.localgov_event.localgov_event_call_to_action
     - field.field.node.localgov_event.localgov_event_categories
@@ -23,7 +24,7 @@ third_party_settings:
   field_group:
     group_tags:
       children:
-        - group_content
+        - group_details
         - group_date
         - group_location
         - group_facets
@@ -36,7 +37,7 @@ third_party_settings:
         classes: ''
         direction: vertical
       label: tags
-    group_content:
+    group_details:
       children:
         - title
         - body
@@ -52,7 +53,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Content
+      label: Details
     group_date:
       children:
         - localgov_event_date
@@ -158,15 +159,19 @@ content:
   localgov_event_location:
     weight: 12
     settings:
-      form_mode: default
+      form_mode: inline
+      override_labels: true
+      label_singular: location
+      label_plural: locations
+      collapsible: true
+      collapsed: true
+      allow_new: true
+      allow_existing: true
+      match_operator: CONTAINS
       revision: false
-      override_labels: false
-      label_singular: ''
-      label_plural: ''
-      collapsible: false
-      collapsed: false
+      allow_duplicate: false
     third_party_settings: {  }
-    type: inline_entity_form_simple
+    type: inline_entity_form_complex
     region: content
   localgov_event_price:
     weight: 7

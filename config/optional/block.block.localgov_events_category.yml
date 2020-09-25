@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - facets.facet.localgov_events_category
+  module:
+    - facets
+  theme:
+    - localgov_theme
+id: localgov_events_category
+theme: localgov_theme
+region: sidebar_first
+weight: -4
+provider: null
+plugin: 'facet_block:localgov_events_category'
+settings:
+  id: 'facet_block:localgov_events_category'
+  label: 'Events category'
+  provider: facets
+  label_display: '0'
+  block_id: localgov_event_category
+visibility: {  }

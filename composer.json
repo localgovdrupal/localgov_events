@@ -8,6 +8,8 @@
     "require": {
         "drupal/date_recur": "^2.0",
         "drupal/date_recur_modular": "^2.0",
+        "drupal/facets": "^1.5",
+        "drupal/search_api": "^1.17",
         "localgovdrupal/localgov_core": "dev-master",
         "localgovdrupal/localgov_geo": "dev-master"
     },

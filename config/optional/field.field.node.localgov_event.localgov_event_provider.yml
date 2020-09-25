@@ -5,7 +5,6 @@ dependencies:
     - field.storage.node.localgov_event_provider
     - node.type.localgov_event
     - node.type.localgov_directories_page
-    - node.type.localgov_directories_venue
 id: node.localgov_event.localgov_event_provider
 field_name: localgov_event_provider
 entity_type: node
