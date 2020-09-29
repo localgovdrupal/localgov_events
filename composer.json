@@ -15,5 +15,17 @@
     },
     "require-dev": {
         "localgovdrupal/localgov_directories": "dev-master"
+    },
+    "extra": {
+        "enable-patching": true,
+        "composer-exit-on-patch-failure": true,
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
+        "patches": {
+            "drupal/geolocation": {
+                "Fix schema #3173876": "https://www.drupal.org/files/issues/2020-09-29/views-field-date-recur-date-schema-3173876-1.patch"
+            }
+        }
     }
 }
