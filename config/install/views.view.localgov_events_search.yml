@@ -7,10 +7,10 @@ dependencies:
   module:
     - search_api
     - user
-id: localgov_events
-label: Events
+id: localgov_events_search
+label: 'Events search'
 module: views
-description: 'Events listing view.'
+description: 'Events search view.'
 tag: ''
 base_table: search_api_index_localgov_events
 base_field: search_api_id
@@ -30,10 +30,7 @@ display:
         options: {  }
       query:
         type: views_query
-        options:
-          bypass_access: false
-          skip_access: false
-          preserve_facet_query_args: false
+        options: {  }
       exposed_form:
         type: basic
         options:
@@ -45,12 +42,17 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
-        type: mini
+        type: full
         options:
-          items_per_page: 10
+          items_per_page: 20
           offset: 0
           id: 0
           total_pages: null
+          tags:
+            previous: ‹‹
+            next: ››
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -59,13 +61,15 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          tags:
-            previous: ‹‹
-            next: ››
+          quantity: 9
       style:
         type: default
       row:
         type: search_api
+        options:
+          view_modes:
+            'entity:node':
+              localgov_event: teaser
       fields:
         localgov_event_categories:
           table: search_api_index_localgov_events
@@ -209,7 +213,7 @@ display:
           expose:
             label: ''
           plugin_id: search_api
-      title: Events
+      title: 'Events search'
       header: {  }
       footer: {  }
       empty:
@@ -223,7 +227,7 @@ display:
           empty: true
           tokenize: false
           content:
-            value: 'No events found.'
+            value: 'No results found for your search.'
             format: wysiwyg
           plugin_id: text
       relationships: {  }
@@ -248,7 +252,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: events
+      path: events/search
       cache:
         type: none
       defaults:

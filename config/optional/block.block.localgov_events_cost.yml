@@ -5,12 +5,13 @@ dependencies:
     - facets.facet.localgov_events_price
   module:
     - facets
+    - system
   theme:
     - localgov_theme
 id: localgov_events_cost
 theme: localgov_theme
 region: sidebar_first
-weight: -5
+weight: -6
 provider: null
 plugin: 'facet_block:localgov_events_price'
 settings:
@@ -19,4 +20,9 @@ settings:
   provider: facets
   label_display: '0'
   block_id: localgov_events_cost
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: /events/search
+    negate: false
+    context_mapping: {  }

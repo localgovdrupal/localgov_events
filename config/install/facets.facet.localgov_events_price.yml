@@ -3,7 +3,7 @@ status: true
 dependencies:
   config:
     - search_api.index.localgov_events
-    - views.view.localgov_events
+    - views.view.localgov_events_search
   module:
     - search_api
 id: localgov_events_price
@@ -13,18 +13,12 @@ weight: 0
 min_count: 1
 show_only_one_result: false
 field_identifier: localgov_event_price
-facet_source_id: 'search_api:views_page__localgov_events__events_page'
+facet_source_id: 'search_api:views_page__localgov_events_search__events_page'
 widget:
-  type: checkbox
+  type: dropdown
   config:
     show_numbers: false
-    soft_limit: 0
-    soft_limit_settings:
-      show_less_label: 'Show less'
-      show_more_label: 'Show more'
-    show_reset_link: false
-    reset_text: 'Show all'
-    hide_reset_when_no_selection: false
+    default_option_label: '- All -'
 query_operator: or
 use_hierarchy: false
 expand_hierarchy: false

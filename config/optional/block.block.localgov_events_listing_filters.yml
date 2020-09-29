@@ -2,20 +2,20 @@ langcode: en
 status: true
 dependencies:
   config:
-    - views.view.localgov_events_search
+    - views.view.localgov_events_listing
   module:
     - system
     - views
   theme:
     - localgov_theme
-id: localgov_events_search
+id: localgov_events_listing_filters
 theme: localgov_theme
 region: sidebar_first
-weight: -8
+weight: -9
 provider: null
-plugin: 'views_exposed_filter_block:localgov_events_search-events_page'
+plugin: 'views_exposed_filter_block:localgov_events_listing-page_all_events'
 settings:
-  id: 'views_exposed_filter_block:localgov_events_search-events_page'
+  id: 'views_exposed_filter_block:localgov_events_listing-page_all_events'
   label: ''
   provider: views
   label_display: '0'
@@ -23,6 +23,6 @@ settings:
 visibility:
   request_path:
     id: request_path
-    pages: "/events\r\n/events/search"
+    pages: /events
     negate: false
     context_mapping: {  }

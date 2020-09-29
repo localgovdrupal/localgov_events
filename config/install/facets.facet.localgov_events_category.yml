@@ -3,7 +3,7 @@ status: true
 dependencies:
   config:
     - search_api.index.localgov_events
-    - views.view.localgov_events
+    - views.view.localgov_events_search
   module:
     - search_api
 id: localgov_events_category
@@ -13,12 +13,12 @@ weight: 0
 min_count: 1
 show_only_one_result: false
 field_identifier: localgov_event_categories
-facet_source_id: 'search_api:views_page__localgov_events__events_page'
+facet_source_id: 'search_api:views_page__localgov_events_search__events_page'
 widget:
   type: dropdown
   config:
     show_numbers: false
-    default_option_label: '- Any -'
+    default_option_label: '- All -'
 query_operator: or
 use_hierarchy: false
 expand_hierarchy: false

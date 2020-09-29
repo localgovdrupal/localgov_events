@@ -2,7 +2,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.date_format.medium
+    - core.date_format.localgov_event_date_full
+    - core.date_format.localgov_event_date_hour
     - field.field.node.localgov_event.body
     - field.field.node.localgov_event.localgov_event_call_to_action
     - field.field.node.localgov_event.localgov_event_categories
@@ -45,14 +46,14 @@ content:
     weight: 1
     label: hidden
     settings:
-      show_next: 5
-      count_per_item: true
-      occurrence_format_type: medium
-      same_end_date_format_type: medium
-      interpreter: null
-      separator: '-'
-      format_type: medium
+      format_type: localgov_event_date_full
+      occurrence_format_type: localgov_event_date_full
+      same_end_date_format_type: localgov_event_date_hour
+      separator: to
       timezone_override: ''
+      interpreter: ''
+      show_next: 10
+      count_per_item: false
     third_party_settings: {  }
     type: date_recur_basic_formatter
     region: content
@@ -61,7 +62,7 @@ content:
     weight: 0
     label: hidden
     settings:
-      view_mode: default
+      view_mode: scale_crop_7_3_large
       link: false
     third_party_settings: {  }
     region: content
@@ -75,8 +76,8 @@ content:
     type: entity_reference_entity_view
     region: content
 hidden:
+  links: true
   localgov_event_categories: true
   localgov_event_locality: true
   localgov_event_price: true
-  links: true
   search_api_excerpt: true
