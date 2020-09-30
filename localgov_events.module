@@ -125,7 +125,6 @@ function localgov_events_form_views_exposed_form_alter(&$form, \Drupal\Core\Form
     $form['date_picker']['dates'] = [
       '#type' => 'select',
       '#options' => $date_options,
-      '#empty_option' => 'choose',
       '#attributes' => ['class' => ['js-date-picker']],
     ];
     $form['date_picker']['start'] = [
