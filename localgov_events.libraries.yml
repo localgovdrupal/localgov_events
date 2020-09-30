@@ -1,0 +1,6 @@
+date-picker:
+  version: 1.x
+  js:
+    js/localgov_events_date_picker.js: { }
+  dependencies:
+    - core/jquery
