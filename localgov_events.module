@@ -149,3 +149,23 @@ function localgov_events_form_views_exposed_form_alter(&$form, \Drupal\Core\Form
     unset($form['end']);
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter() for node_localgov_event_form form.
+ */
+function localgov_events_form_node_localgov_event_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Add Ajax callback to the Venue field to update the Location field.
+  if (isset($form['localgov_event_venue'])) {
+    $form['localgov_event_venue']['widget'][0]['target_id']['#ajax'] = [
+      'callback' => ['Drupal\localgov_events\Form\VenueAjaxCallback', 'getLocation'],
+      'disable-refocus' => FALSE,
+      'event' => 'change',
+      'wrapper' => 'js-event-location',
+      'progress' => [
+        'type' => 'throbber',
+        'message' => NULL,
+      ],
+    ];
+    $form['localgov_event_location']['#attributes']['id'][] = 'js-event-location';
+  }
+}

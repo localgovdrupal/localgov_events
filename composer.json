@@ -24,7 +24,7 @@
         },
         "patches": {
             "drupal/date_recur": {
-                "Fix schema #3173876": "https://www.drupal.org/files/issues/2020-09-29/views-field-date-recur-date-schema-3173876-1.patch"
+                "Fix schema #3173876": "https://www.drupal.org/files/issues/2020-10-02/views-field-date-recur-date-schema-3173876-5.patch"
             }
         }
     }
