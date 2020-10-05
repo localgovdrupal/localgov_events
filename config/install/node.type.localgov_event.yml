@@ -1,12 +1,7 @@
 langcode: en
 status: true
-dependencies:
-  module:
-    - menu_ui
-third_party_settings:
-  menu_ui:
-    available_menus: {  }
-    parent: ''
+dependencies: {  }
+third_party_settings: {  }
 name: Event
 type: localgov_event
 description: 'An event to appear in the events listing and optionally integrate into a directory.'

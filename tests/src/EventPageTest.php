@@ -16,7 +16,7 @@ class EventPageTest extends BrowserTestBase {
    *
    * @var string
    */
-  protected $profile = 'standard';
+  protected $profile = 'minimal';
 
   /**
    * A user with permission to bypass content access checks.

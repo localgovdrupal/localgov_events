@@ -22,7 +22,7 @@ class EventsAddEditCallbacks {
    *
    * @var string
    */
-  const NOT_LOCATION_FROM_VENUE = '<p>Using a different location from venue. To use the same location remove the location below and save the page.</p>';
+  const LOCATION_NOT_FROM_VENUE = '<p>Using a different location from venue. To use the same location remove the location below and save the page.</p>';
 
   /**
    * Return location field widget.
@@ -109,7 +109,7 @@ class EventsAddEditCallbacks {
           $message = self::LOCATION_FROM_VENUE;
         }
         else {
-          $message = self::NOT_LOCATION_FROM_VENUE;
+          $message = self::LOCATION_NOT_FROM_VENUE;
         }
         $form['localgov_event_location']['#prefix'] = $message;
       }

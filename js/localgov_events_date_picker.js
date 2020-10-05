@@ -8,7 +8,6 @@
     attach: function attach(context, settings) {
 
       $('.js-date-picker').on('change', function() {
-        console.log(this.value);
 
         let start_date = null;
         let end_date = null;
@@ -22,13 +21,16 @@
             break;
 
           case 'tomorrow':
-            start_date = new Date(today.getDate() + 1);
-            end_date = new Date(today.getDate() + 1);
+            const tomorrow = today.setDate(today.getDate() + 1);
+            start_date = new Date(tomorrow);
+            end_date = new Date(tomorrow);
             break;
 
           case 'this_week':
-            const first = today.getDate() - today.getDay() + 1; // First day is the day of the month - the day of the week
-            const last = first + 6; // last day is the first day + 6
+            // First day is the day of the month - the day of the week.
+            const first = today.getDate() - today.getDay() + 1;
+            // Last day is the first day + 6.
+            const last = first + 6;
             start_date = new Date(today.setDate(first));
             end_date = new Date(today.setDate(last));
             break;

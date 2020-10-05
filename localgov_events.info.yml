@@ -6,6 +6,9 @@ package: LocalGov Drupal
 
 dependencies:
   # Core
+  - drupal:link
+  - drupal:path
+  - drupal:taxonomy
   - drupal:views
   # Contrib
   - date_recur:date_recur
