@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * LocalGov Events module file.
@@ -158,7 +159,7 @@ function localgov_events_form_views_exposed_form_alter(&$form, FormStateInterfac
       '#title' => t('Start date'),
       '#date_date_format' => 'Y-m-d',
       '#attributes' => [
-        'type'=> 'date',
+        'type' => 'date',
         'class' => ['js-date-picker-start'],
       ],
     ];
@@ -168,7 +169,7 @@ function localgov_events_form_views_exposed_form_alter(&$form, FormStateInterfac
       '#title' => t('End date'),
       '#date_date_format' => 'Y-m-d',
       '#attributes' => [
-        'type'=> 'date',
+        'type' => 'date',
         'class' => ['js-date-picker-end'],
       ],
     ];
@@ -195,7 +196,7 @@ function localgov_events_views_pre_view(ViewExecutable $view) {
  * Implements hook_form_FORM_ID_alter() for node_localgov_event_form form.
  */
 function localgov_events_form_node_localgov_event_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  //  Configure node add form.
+  // Configure node add form.
   EventsAddEditCallbacks::configureNodeForm($form);
 }
 

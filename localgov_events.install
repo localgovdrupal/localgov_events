@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * LocalGov Events install file.
@@ -22,11 +23,11 @@ function localgov_events_install() {
     'Paid',
   ];
   foreach ($prices as $price) {
-    $term = Term::create(array(
+    Term::create([
       'parent' => [],
       'name' => $price,
       'vid' => 'localgov_event_price',
-    ))->save();
+    ])->save();
   }
 
   // Install default config for simple_sitemap, as this does not appear to work
