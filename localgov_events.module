@@ -7,6 +7,7 @@
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\ViewExecutable;
 use Drupal\localgov_events\Form\EventsAddEditCallbacks;
 
 /**
@@ -127,7 +128,7 @@ function localgov_events_optional_fields_settings($directory_page, $directory_ve
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for the views_exposed_form form.
  */
-function localgov_events_form_views_exposed_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function localgov_events_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Modify the events listing exposed filters to add a nice date widget.
   if (isset($form['#id']) && $form['#id'] == 'views-exposed-form-localgov-events-listing-page-all-events') {
 
@@ -172,6 +173,21 @@ function localgov_events_form_views_exposed_form_alter(&$form, \Drupal\Core\Form
       ],
     ];
     unset($form['end']);
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function localgov_events_views_pre_view(ViewExecutable $view) {
+  if ($view->id() == 'localgov_events_listing') {
+
+    // Add one day to end date so events for that day are included.
+    $filters = $view->getExposedInput();
+    if (isset($filters['end'])) {
+      $filters['end'] = date('Y-m-d', strtotime($filters['end'] . ' + 1 days'));;
+      $view->setExposedInput($filters);
+    }
   }
 }
 
