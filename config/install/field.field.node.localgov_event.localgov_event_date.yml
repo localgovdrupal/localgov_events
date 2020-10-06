@@ -6,6 +6,8 @@ dependencies:
     - node.type.localgov_event
   module:
     - date_recur
+_core:
+  default_config_hash: Ie30UaIWVhe8pDrMV9O5Tol0LEvI0KIJktNLa6ndMac
 id: node.localgov_event.localgov_event_date
 field_name: localgov_event_date
 entity_type: node
@@ -16,7 +18,13 @@ required: true
 translatable: false
 default_value:
   -
-    default_date_time_zone: UTC
+    default_date_type: now
+    default_date: now
+    default_end_date_type: now
+    default_end_date: now
+    default_date_time_zone: Europe/London
+    default_time_zone: Europe/London
+    default_rrule: ''
 default_value_callback: ''
 settings:
   precreate: P2Y
