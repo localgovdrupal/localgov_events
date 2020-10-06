@@ -12,11 +12,18 @@ use Drupal\Tests\BrowserTestBase;
 class EventPageTest extends BrowserTestBase {
 
   /**
-   * Test breadcrumbs in the Standard profile.
+   * Test using the minimal profile.
    *
    * @var string
    */
   protected $profile = 'minimal';
+
+  /**
+   * Test using the stark theme.
+   *
+   * @var string
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * A user with permission to bypass content access checks.
