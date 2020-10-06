@@ -60,17 +60,15 @@ class EventsAddEditCallbacks {
   public static function submitHandler(array &$form, FormStateInterface $form_state) {
     // Set location if there's a venue but no location.
     $venue_value = $form_state->getValue('localgov_event_venue');
-    $location_value = $form_state->getValue('localgov_event_location');
-    if (
-      isset($venue_value[0]['target_id']) &&
-      $venue_value[0]['target_id'] &&
-      !isset($location_value[0]['target_id'])
-    ) {
-      $event = $form_state->getFormObject()->getEntity();
+    if (isset($venue_value[0]['target_id'])) {
       $venue = Node::load($venue_value[0]['target_id']);
-      $location_value = $venue->get('localgov_location')->getValue();
-      $event->set('localgov_event_location', $location_value);
-      $event->save();
+      $event = $form_state->getFormObject()->getEntity();
+      $location_value = $event->get('localgov_event_location')->getValue();
+      $venue_location_value = $venue->get('localgov_location')->getValue();
+      if (!$location_value && $venue_location_value) {
+        $event->set('localgov_event_location', $venue_location_value);
+        $event->save();
+      }
     }
   }
 

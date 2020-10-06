@@ -164,9 +164,9 @@ content:
       label_singular: location
       label_plural: locations
       collapsible: true
-      collapsed: true
+      collapsed: false
       allow_new: true
-      allow_existing: true
+      allow_existing: false
       match_operator: CONTAINS
       revision: false
       allow_duplicate: false
