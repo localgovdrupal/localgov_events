@@ -10,6 +10,29 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\localgov_events\Form\EventsAddEditCallbacks;
 
 /**
+ * Implements hook_theme().
+ */
+function localgov_events_theme($existing, $type, $theme, $path) {
+  return [
+    'node__localgov_event__teaser' => [
+      'template' => 'node--localgov-event--teaser',
+      'base hook' => 'node',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function localgov_events_page_attachments(array &$attachments) {
+  // Attach events styling library to events pages and views.
+  $current_path = \Drupal::service('path.current')->getPath();
+  if (substr($current_path, 0, 7) == '/events') {
+    $attachments['#attached']['library'][] = 'localgov_events/events-styling';
+  }
+}
+
+/**
  * Implements hook_modules_installed().
  */
 function localgov_events_modules_installed($modules) {

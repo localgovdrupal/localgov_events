@@ -1,3 +1,9 @@
+events-styling:
+  version: 1.x
+  css:
+    base:
+      css/localgov_events.css: {}
+
 date-picker:
   version: 1.x
   js:
