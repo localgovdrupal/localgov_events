@@ -1,0 +1,11 @@
+/**
+ * Styling for Events pages.
+ */
+
+.views-field-localgov-event-image img,
+.media--view-mode-localgov-event-thumbnail img {
+  float: left;
+  width: 200px;
+  height: auto;
+  margin: 0 1.5rem 1rem 0;
+}
