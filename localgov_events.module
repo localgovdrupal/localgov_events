@@ -61,10 +61,18 @@ function localgov_events_optional_fields_settings($directory_page, $directory_ve
     $form_display = \Drupal::entityTypeManager()
       ->getStorage('entity_form_display')
       ->load('node.localgov_event.default');
+    if (empty($form_display)) {
+      // When first imported can not be set yet.
+      return;
+    }
     assert($form_display instanceof EntityFormDisplayInterface);
     $view_display = \Drupal::entityTypeManager()
       ->getStorage('entity_view_display')
       ->load('node.localgov_event.default');
+    if (empty($view_display)) {
+      // When first imported can not be set yet.
+      return;
+    }
     assert($view_display instanceof EntityViewDisplayInterface);
     $group_location = $form_display->getThirdPartySetting('field_group', 'group_location');
     $locations = $group_location['children'];
