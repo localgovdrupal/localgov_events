@@ -185,7 +185,7 @@ function localgov_events_views_pre_view(ViewExecutable $view) {
 
     // Add one day to end date so events for that day are included.
     $filters = $view->getExposedInput();
-    if (isset($filters['end'])) {
+    if (isset($filters['end']) && strlen($filters['end']) > 0) {
       $filters['end'] = date('Y-m-d', strtotime($filters['end'] . ' + 1 days'));;
       $view->setExposedInput($filters);
     }
