@@ -10,11 +10,11 @@
         "drupal/date_recur_modular": "^3.0",
         "drupal/facets": "^1.5",
         "drupal/search_api": "^1.17",
-        "localgovdrupal/localgov_core": "2.x-dev",
+        "localgovdrupal/localgov_core": "^2.0",
         "localgovdrupal/localgov_geo": "^1.0"
     },
     "require-dev": {
-        "localgovdrupal/localgov_directories": "2.x-dev"
+        "localgovdrupal/localgov_directories": "^2.0"
     },
     "extra": {
         "enable-patching": true,
