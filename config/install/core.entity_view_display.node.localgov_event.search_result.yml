@@ -13,8 +13,6 @@ dependencies:
     - field.field.node.localgov_event.localgov_event_locality
     - field.field.node.localgov_event.localgov_event_location
     - field.field.node.localgov_event.localgov_event_price
-    - field.field.node.localgov_event.localgov_event_provider
-    - field.field.node.localgov_event.localgov_event_venue
     - node.type.localgov_event
   module:
     - date_recur
