@@ -36,11 +36,11 @@ jobs:
           echo "GIT_BASE=${GITHUB_BASE_REF}" >> $GITHUB_ENV
           echo "GIT_BRANCH=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
           echo "GIT_REPO=${{ github.event.pull_request.head.repo.full_name }}" >> $GITHUB_ENV
-  
+
       - name: Set composer branch reference for main version branches
         if: endsWith(github.ref, '.x')
         run: echo "COMPOSER_REF=${GIT_BRANCH}-dev" >> $GITHUB_ENV
-          
+
       - name: Set composer branch reference for non-version branches
         if: endsWith(github.ref, '.x') == false
         run: echo "COMPOSER_REF=dev-${GIT_BRANCH}" >> $GITHUB_ENV
@@ -49,7 +49,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./html
-          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
+          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}-${{ secrets.CACHE_VERSION }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -94,7 +94,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./html
-          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
+          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}-${{ secrets.CACHE_VERSION }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
       - name: Setup PHP
@@ -125,7 +125,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./html
-          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
+          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}-${{ secrets.CACHE_VERSION }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
 
@@ -163,7 +163,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./html
-          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
+          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}-${{ secrets.CACHE_VERSION }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
 
