@@ -44,7 +44,6 @@ function localgov_events_localgov_roles_default(): array {
     RolesHelper::AUTHOR_ROLE => [
       'create localgov_event content',
       'delete own localgov_event content',
-      'edit any localgov_event content',
       'edit own localgov_event content',
       'revert localgov_event revisions',
       'view localgov_event revisions',
@@ -52,9 +51,7 @@ function localgov_events_localgov_roles_default(): array {
     RolesHelper::CONTRIBUTOR_ROLE => [
       'create localgov_event content',
       'delete own localgov_event content',
-      'edit any localgov_event content',
       'edit own localgov_event content',
-      'revert localgov_event revisions',
       'view localgov_event revisions',
     ],
   ];
