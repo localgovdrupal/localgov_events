@@ -6,9 +6,9 @@ dependencies:
   module:
     - facets
   theme:
-    - localgov_theme
+    - localgov_base
 id: localgov_events_neighbourhood
-theme: localgov_theme
+theme: localgov_base
 region: sidebar_first
 weight: -6
 provider: null

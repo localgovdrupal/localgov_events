@@ -7,9 +7,9 @@ dependencies:
     - system
     - views
   theme:
-    - localgov_theme
+    - localgov_base
 id: localgov_events_listing_filters
-theme: localgov_theme
+theme: localgov_base
 region: sidebar_first
 weight: -9
 provider: null
