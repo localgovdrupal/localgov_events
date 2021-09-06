@@ -11,10 +11,10 @@
         "drupal/facets": "^1.5",
         "drupal/search_api": "^1.17",
         "localgovdrupal/localgov_core": "^2.1",
-        "localgovdrupal/localgov_geo": "^1.0"
+        "localgovdrupal/localgov_geo": "dev-feature/1.x/area-and-ux-autocomplete"
     },
     "require-dev": {
-        "localgovdrupal/localgov_directories": "^2.0"
+        "localgovdrupal/localgov_directories": "^dev-origin/feature/2.x/localgov-geo-browser"
     },
     "extra": {
         "enable-patching": true,

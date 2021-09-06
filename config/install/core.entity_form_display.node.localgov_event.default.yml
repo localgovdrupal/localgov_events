@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_form_mode.localgov_geo.inline
+    - entity_browser.browser.localgov_geo_library
     - field.field.node.localgov_event.body
     - field.field.node.localgov_event.localgov_event_call_to_action
     - field.field.node.localgov_event.localgov_event_categories
@@ -14,8 +14,8 @@ dependencies:
     - node.type.localgov_event
   module:
     - date_recur_modular
+    - entity_browser
     - field_group
-    - inline_entity_form
     - link
     - media_library
     - path
@@ -159,19 +159,16 @@ content:
   localgov_event_location:
     weight: 12
     settings:
-      form_mode: inline
-      override_labels: true
-      label_singular: location
-      label_plural: locations
-      collapsible: true
-      collapsed: false
-      allow_new: true
-      allow_existing: false
-      match_operator: CONTAINS
-      revision: false
-      allow_duplicate: false
+      entity_browser: localgov_geo_library
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_replace: false
+      field_widget_display_settings: {  }
     third_party_settings: {  }
-    type: inline_entity_form_complex
+    type: entity_browser_entity_reference
     region: content
   localgov_event_price:
     weight: 7
