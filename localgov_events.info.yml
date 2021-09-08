@@ -21,4 +21,4 @@ dependencies:
   # LocalGov Drupal
   - localgov_core:localgov_core
   - localgov_core:localgov_media
-  - localgov_geo:localgov_geo
+  - localgov_geo:localgov_geo_address
