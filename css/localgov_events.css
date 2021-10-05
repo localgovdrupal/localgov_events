@@ -2,6 +2,10 @@
  * Styling for Events pages.
  */
 
+.view-localgov-events-listing .views-row {
+  clear: both;
+}
+
 .views-field-localgov-event-image img,
 .media--view-mode-localgov-event-thumbnail img {
   float: left;
