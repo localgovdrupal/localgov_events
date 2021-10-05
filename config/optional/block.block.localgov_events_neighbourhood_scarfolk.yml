@@ -6,9 +6,9 @@ dependencies:
   module:
     - facets
   theme:
-    - localgov_base
-id: localgov_events_neighbourhood
-theme: localgov_base
+    - localgov_scarfolk
+id: localgov_events_neighbourhood_scarfolk
+theme: localgov_scarfolk
 region: sidebar_first
 weight: -6
 provider: null

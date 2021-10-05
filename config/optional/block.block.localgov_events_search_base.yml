@@ -8,7 +8,7 @@ dependencies:
     - views
   theme:
     - localgov_base
-id: localgov_events_search
+id: localgov_events_search_base
 theme: localgov_base
 region: sidebar_first
 weight: -8
