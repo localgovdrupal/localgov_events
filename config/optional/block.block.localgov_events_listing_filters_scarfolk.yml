@@ -7,9 +7,9 @@ dependencies:
     - system
     - views
   theme:
-    - localgov_base
-id: localgov_events_listing_filters
-theme: localgov_base
+    - localgov_scarfolk
+id: localgov_events_listing_filters_scarfolk
+theme: localgov_scarfolk
 region: sidebar_first
 weight: -9
 provider: null
