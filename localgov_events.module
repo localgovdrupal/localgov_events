@@ -245,6 +245,12 @@ function localgov_events_views_pre_view(ViewExecutable $view) {
       $filters['end'] = date('Y-m-d', strtotime($filters['end'] . ' + 1 days'));
       $view->setExposedInput($filters);
     }
+
+    // Set default to todays date if empty.
+    if (empty($filters['start'])) {
+      $filters['start'] = date('Y-m-d');
+      $view->setExposedInput($filters);
+    }
   }
 }
 
