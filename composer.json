@@ -23,9 +23,6 @@
             "drupal/core": "-p2"
         },
         "patches": {
-            "drupal/date_recur": {
-                "Fix schema #3173876": "https://www.drupal.org/files/issues/2020-10-02/views-field-date-recur-date-schema-3173876-5.patch"
-            },
             "drupal/date_recur_modular": {
                 "Date validation #3154944": "https://www.drupal.org/files/issues/2020-06-25/alpha-modal-form-end-date-validation.patch"
             }
