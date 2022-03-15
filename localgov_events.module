@@ -92,7 +92,13 @@ function localgov_events_page_attachments(array &$attachments) {
 /**
  * Implements hook_modules_installed().
  */
-function localgov_events_modules_installed($modules) {
+function localgov_events_modules_installed($modules, $is_syncing) {
+
+  // Don't configure the extra fields during config sync operations.
+  if ($is_syncing) {
+    return;
+  }
+
   // Configure optional fields.
   $directory_page = in_array('localgov_directories_page', $modules);
   $directory_venue = in_array('localgov_directories_venue', $modules);
