@@ -10,7 +10,12 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Implements hook_install().
  */
-function localgov_events_install() {
+function localgov_events_install($is_syncing) {
+
+  // Don't configure the extra fields or config during config sync operations.
+  if ($is_syncing) {
+    return;
+  }
 
   // Configure optional fields.
   $directory_page = \Drupal::moduleHandler()->moduleExists('localgov_directories_page');
