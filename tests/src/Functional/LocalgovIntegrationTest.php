@@ -3,7 +3,6 @@
 namespace Drupal\Tests\localgov_events\Functional;
 
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
