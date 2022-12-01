@@ -212,6 +212,7 @@ function localgov_events_form_views_exposed_form_alter(&$form, FormStateInterfac
     ];
     $form['date_picker']['dates'] = [
       '#type' => 'select',
+      '#title' => t('Date range'),
       '#options' => $date_options,
       '#default_value' => 'choose',
       '#attributes' => ['class' => ['js-date-picker']],
