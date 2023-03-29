@@ -18,7 +18,9 @@ content:
     settings:
       image_style: square_small
       image_link: ''
-    third_party_settings: {  }
+      image_loading:
+        attribute: lazy
+    third_party_settings: {}
     type: image
     weight: 1
     region: content
