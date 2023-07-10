@@ -26,7 +26,7 @@ class EventPageTest extends BrowserTestBase {
    *
    * @var string
    */
-  protected $profile = 'minimal';
+  protected $profile = 'testing';
 
   /**
    * Test using the stark theme.
