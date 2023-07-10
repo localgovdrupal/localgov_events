@@ -20,7 +20,6 @@ settings:
   handler_settings:
     target_bundles:
       localgov_directories_page: localgov_directories_page
-      localgov_directories_venue: localgov_directories_venue
     sort:
       field: _none
     auto_create: false
