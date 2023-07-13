@@ -12,6 +12,16 @@ use Drupal\Tests\BrowserTestBase;
 class EventPageTest extends BrowserTestBase {
 
   /**
+   * Disable schema checking, for now.
+   *
+   * Pending:-
+   * https://www.drupal.org/project/leaflet/issues/3344455
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
+  /**
    * Test using the minimal profile.
    *
    * @var string

@@ -9,7 +9,7 @@ field_name: localgov_event_location
 entity_type: node
 type: entity_reference
 settings:
-  target_type: localgov_geo
+  target_type: geo_entity
 module: core
 locked: false
 cardinality: 1

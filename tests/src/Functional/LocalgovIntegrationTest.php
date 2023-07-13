@@ -22,6 +22,16 @@ class LocalgovIntegrationTest extends BrowserTestBase {
   use CronRunTrait;
 
   /**
+   * Disable schema checking, for now.
+   *
+   * Pending:-
+   * https://www.drupal.org/project/leaflet/issues/3344455
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
+  /**
    * Test breadcrumbs in the Standard profile.
    *
    * @var string
