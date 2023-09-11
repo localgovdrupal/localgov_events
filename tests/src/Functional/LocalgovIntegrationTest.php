@@ -96,9 +96,6 @@ class LocalgovIntegrationTest extends BrowserTestBase {
    */
   protected static $modules = [
     'localgov_core',
-    'localgov_services_landing',
-    'localgov_services_sublanding',
-    'localgov_services_navigation',
     'localgov_topics',
     'localgov_events',
     'localgov_search',
