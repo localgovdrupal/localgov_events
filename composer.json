@@ -16,16 +16,5 @@
     },
     "require-dev": {
         "localgovdrupal/localgov_directories": "^2.0"
-    },
-    "extra": {
-        "enable-patching": true,
-        "composer-exit-on-patch-failure": true,
-        "patchLevel": {
-            "drupal/core": "-p2"
-        },
-        "patches": {
-            "drupal/date_recur_modular": {
-                "Date validation #3154944": "https://www.drupal.org/files/issues/2020-06-25/alpha-modal-form-end-date-validation.patch"            }
-        }
     }
 }
