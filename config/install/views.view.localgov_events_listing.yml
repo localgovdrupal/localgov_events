@@ -361,7 +361,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           date_format: localgov_event_date_full
-          custom_date_format: 'l, jS F Y, g.ia'
+          custom_date_format: 'l j F Y, g.ia'
           timezone: ''
           plugin_id: date_recur_date
         localgov_event_date_end_value_2:
@@ -465,7 +465,7 @@ display:
           empty_zero: false
           hide_alter_empty: true
           date_format: localgov_event_date_full
-          custom_date_format: 'l, jS F Y, g.ia'
+          custom_date_format: 'l j F Y, g.ia'
           timezone: ''
           plugin_id: date_recur_date
         body:
