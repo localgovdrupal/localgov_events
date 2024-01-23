@@ -61,3 +61,15 @@ function localgov_events_update_8001() {
     $config->save(TRUE);
   }
 }
+
+/**
+ * Update date format to GDS if it hasn't been changed.
+ */
+function localgov_events_update_8002() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('core.date_format.localgov_event_date_full');
+  if ($config->get('pattern') == 'l, jS F Y, g.ia') {
+    $config->set('pattern', 'l j F Y, g.ia');
+    $config->save(TRUE);
+  }
+}
