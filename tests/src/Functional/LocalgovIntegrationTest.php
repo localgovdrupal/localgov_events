@@ -128,6 +128,13 @@ class LocalgovIntegrationTest extends BrowserTestBase {
       'body' => $body,
       'type' => 'localgov_event',
       'status' => NodeInterface::PUBLISHED,
+      'localgov_event_date' => [
+        'value' => '2024-03-01T00:00:00',
+        'end_value' => '2024-03-01T01:00:00',
+        'rrule' => NULL,
+        'timezone' => 'Europe/London',
+        'infinite' => 0,
+      ],
     ]);
     $this->cronRun();
 
