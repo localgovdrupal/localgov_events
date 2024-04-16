@@ -24,6 +24,9 @@
             "drupal/core": "-p2"
         },
         "patches": {
+            "date_recur": {
+                "Create occurrences for latest and default versions #3010184": "https://www.drupal.org/files/issues/2019-06-22/date_recur-save-default-rev-occurances-3010184-6.patch"
+            },
             "drupal/date_recur_modular": {
                 "Date validation #3154944": "https://www.drupal.org/files/issues/2020-06-25/alpha-modal-form-end-date-validation.patch"            }
         }
