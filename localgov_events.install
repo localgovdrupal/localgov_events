@@ -104,4 +104,3 @@ function localgov_events_update_10001($is_syncing) {
     $role->save();
   }
 }
-
