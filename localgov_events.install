@@ -73,3 +73,25 @@ function localgov_events_update_8002() {
     $config->save(TRUE);
   }
 }
+
+/**
+ * Add Reset button to events views.
+ */
+function localgov_events_update_10001($is_syncing) {
+  if (!$is_syncing) {
+    $config_factory = Drupal::service('config.factory');
+    $view_ids = [
+      'views.view.localgov_events_listing',
+      'views.view.localgov_events_search',
+    ];
+    foreach ($view_ids as $view_id) {
+      if ($editable = $config_factory->getEditable($view_id)) {
+        $display = $editable->get('display');
+        if (isset($display['default']['display_options']['exposed_form']['options']['reset_button'])) {
+          $display['default']['display_options']['exposed_form']['options']['reset_button'] = TRUE;
+          $editable->set('display', $display)->save();
+        }
+      }
+    }
+  }
+}
