@@ -73,34 +73,3 @@ function localgov_events_update_8002() {
     $config->save(TRUE);
   }
 }
-
-/**
- * Expanding Events permissions.
- *
- * Grant taxonomy term permissions to Editor role.
- */
-function localgov_events_update_10001($is_syncing) {
-  if (!$is_syncing) {
-    $permissions = [
-      'create terms in localgov_event_category',
-      'create terms in localgov_event_locality',
-      'create terms in localgov_event_price',
-      'delete terms in localgov_event_category',
-      'delete terms in localgov_event_locality',
-      'delete terms in localgov_event_price',
-      'edit terms in localgov_event_category',
-      'edit terms in localgov_event_locality',
-      'edit terms in localgov_event_price',
-      'view term revisions in localgov_event_category',
-      'view term revisions in localgov_event_locality',
-      'view term revisions in localgov_event_price',
-    ];
-    // Make sure Editors have the new View permission.
-    $entity_type_manager = Drupal::service('entity_type.manager');
-    $role = $entity_type_manager->getStorage('user_role')->load('localgov_editor');
-    foreach ($permissions as $permission) {
-      $role->grantPermission($permission);
-    }
-    $role->save();
-  }
-}
