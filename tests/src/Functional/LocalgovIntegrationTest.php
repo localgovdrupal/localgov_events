@@ -2,12 +2,12 @@
 
 namespace Drupal\Tests\localgov_events\Functional;
 
-use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
-use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\node\NodeInterface;
 
 /**
  * Tests pages working together with search, pathauto, services and topics.
