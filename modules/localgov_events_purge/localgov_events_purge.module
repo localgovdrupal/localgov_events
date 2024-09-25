@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for LocalGov Events Purge module.
+ */
+
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_cron().
+ */
+function localgov_events_purge_cron() {
+  // @TODO: create a config form for purge timeframe.
+
+  $config = \Drupal::config('localgov_events_purge.settings');
+  $purge_after = $config->get('purge_after');
+  $purge_after = $purge_after ? $purge_after : 30;
+  $purge_after = '-' . $purge_after . ' days';
+
+  $query = \Drupal::entityQuery('node')
+    ->condition('type', 'localgov_event')
+    ->accessCheck(TRUE); // Explicitly set access check
+
+  $nids = $query->execute();
+
+  if (!empty($nids)) {
+    $nodes = Node::loadMultiple($nids);
+    foreach ($nodes as $node) {
+      $end_date = $node->get('localgov_event_date')->end_value;
+      // Convert $end_date to timestamp.
+      $end_date = strtotime($end_date);
+      if ($end_date < strtotime($purge_after)) {
+        // Let's use dump() for now, so we don't delete nodes.
+        // It takes too long to recreate them :)
+        dump($node->id() . ' will be deleted');
+        // $node->delete();
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+name: 'LocalGov Events Purge'
+type: module
+description: 'Deletes events a certain number of days after their deadline.'
+package: LocalGov Drupal
+core_version_requirement: ^10 || ^11
+dependencies:
+  - localgov_events:localgov_events
