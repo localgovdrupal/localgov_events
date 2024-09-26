@@ -1,0 +1,59 @@
+<?php
+
+use Drupal\content_moderation\Entity\ContentModerationState;
+use \Drupal\node\Entity\Node;
+/**
+ * @file
+ * Contains localgove_expired_events.module.
+ */
+function localgov_expired_events_cron() {
+  $config = \Drupal::config('localgov_expired_events.settings');
+  $expire_days = $config->get('expire_days');
+  $items_per_cron = $config->get('items_per_cron');
+  $action = $config->get('action');
+  $limit = '';
+
+  if ($items_per_cron > 0 ) {
+    $limit = " LIMIT {$items_per_cron}" ;
+  }
+  if ($action == "unpublished") {
+    $node_is_published = "  AND node_field_data.status = 1";
+  }
+
+  try {
+      $statement = "SELECT * FROM date_recur__node__localgov_event_date 
+                    LEFT JOIN node_field_data
+                    ON node_field_data.nid = date_recur__node__localgov_event_date.entity_id
+                    WHERE DATE_ADD(localgov_event_date_end_value, INTERVAL {$expire_days} DAY ) < NOW()" . $node_is_published . $limit;
+      $database = \Drupal::database();
+      $query = $database->query($statement);
+      $results = $query->fetchAll();
+
+      if (!empty($results)) {
+        foreach ($results  as $record) {
+          if (!empty($record->entity_id)) {
+            $entity = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
+            $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
+            if ($action == 'unpublished') {
+              if ($content_moderation_state) {
+                $workflow = $content_moderation_state->get('workflow')->entity;
+                $state_label = $workflow->get('type_settings')['states'];
+                if (in_array('archived', array_keys($state_label))) {
+                  $entity->setUnpublished(TRUE);
+                  $entity->set('moderation_state' , 'archived');
+                  $entity->save();
+                }
+              }
+              else {
+                $entity->setUnpublished();
+                $entity->save();
+              }
+            }
+            else if ($action == 'delete') {
+              $entity->delete();
+            }
+          }
+        }
+      }
+    } catch(Exception $e){}
+}

@@ -1,0 +1,5 @@
+name: LocalGov Expired Events
+description: Archive or Unpublished Expired Events
+package: LocalGov Drupal
+type: module
+core_version_requirement: ^9 || ^10 ||  ^11

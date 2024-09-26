@@ -1,0 +1,6 @@
+localgov_expired_events.admin.settings:
+  title: 'Expired Events Settings'
+  description: 'example of how to make an admin settings page link'
+  parent: 'system.admin_config_development'
+  route_name: localgov_expired_events.form
+  weight: 100

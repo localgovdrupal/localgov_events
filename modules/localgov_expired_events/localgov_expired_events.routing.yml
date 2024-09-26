@@ -1,0 +1,7 @@
+localgov_expired_events.form:
+  path: '/admin/config/expired-events'
+  defaults:
+    _form: '\Drupal\localgov_expired_events\Form\ExpiredEventSettingsForm'
+    _title: 'Expired Event Settings'
+  requirements:
+    _permission: 'administer site configuration'
