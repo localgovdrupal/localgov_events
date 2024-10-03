@@ -100,8 +100,8 @@ function localgov_events_modules_installed($modules, $is_syncing) {
   }
 
   // Configure optional fields.
-  $directory_page = in_array('localgov_directories_page', $modules);
-  $directory_venue = in_array('localgov_directories_venue', $modules);
+  $directory_page = in_array('localgov_directories_page', $modules, TRUE);
+  $directory_venue = in_array('localgov_directories_venue', $modules, TRUE);
   if ($directory_page) {
     \Drupal::service('config.installer')->installOptionalConfig(NULL, [
       'config' => 'node.type.localgov_directories_page',
