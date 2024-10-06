@@ -6,54 +6,70 @@ use \Drupal\node\Entity\Node;
  * @file
  * Contains localgove_expired_events.module.
  */
+
+/**
+ * Implement hook_cron().
+ */
 function localgov_expired_events_cron() {
   $config = \Drupal::config('localgov_expired_events.settings');
   $expire_days = $config->get('expire_days');
   $items_per_cron = $config->get('items_per_cron');
   $action = $config->get('action');
-  $limit = '';
-
-  if ($items_per_cron > 0 ) {
-    $limit = " LIMIT {$items_per_cron}" ;
-  }
-  if ($action == "unpublished") {
-    $node_is_published = "  AND node_field_data.status = 1";
-  }
 
   try {
-      $statement = "SELECT * FROM date_recur__node__localgov_event_date 
-                    LEFT JOIN node_field_data
-                    ON node_field_data.nid = date_recur__node__localgov_event_date.entity_id
-                    WHERE DATE_ADD(localgov_event_date_end_value, INTERVAL {$expire_days} DAY ) < NOW()" . $node_is_published . $limit;
-      $database = \Drupal::database();
-      $query = $database->query($statement);
-      $results = $query->fetchAll();
+    // Query all 
+    $database = \Drupal::database();
+    $query = $database->select('date_recur__node__localgov_event_date', 'dr');
+    $query->join('node_field_data','nfd','dr.entity_id = nfd.nid');
+    $query->fields('dr');
+    if ($action == "unpublished") {
+      $query->condition('nfd.status', 1);
+    }
+    $query->where('DATE_ADD(dr.localgov_event_date_end_value, INTERVAL :day DAY) < NOW()', array(':day' => $expire_days));
+    if ($items_per_cron > 0 ) {
+      $query->range(0, $items_per_cron);
+    }
+    $results = $query->execute()->fetchAll();
 
-      if (!empty($results)) {
-        foreach ($results  as $record) {
-          if (!empty($record->entity_id)) {
-            $entity = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
-            $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
-            if ($action == 'unpublished') {
-              if ($content_moderation_state) {
-                $workflow = $content_moderation_state->get('workflow')->entity;
-                $state_label = $workflow->get('type_settings')['states'];
-                if (in_array('archived', array_keys($state_label))) {
-                  $entity->setUnpublished(TRUE);
-                  $entity->set('moderation_state' , 'archived');
-                  $entity->save();
-                }
-              }
-              else {
-                $entity->setUnpublished();
-                $entity->save();
-              }
-            }
-            else if ($action == 'delete') {
-              $entity->delete();
-            }
+
+    // Loop through returned record,
+    if (!empty($results)) {
+      foreach ($results as $record) {
+        if (!empty($record->entity_id)) {
+          $entity = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
+          $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
+          if ($action == 'unpublished' || $action == 'archived') {
+            _set_content_state($content_moderation_state, $entity, $action);
+          }
+          elseif ($action == 'delete') {
+            $entity->delete();
           }
         }
       }
-    } catch(Exception $e){}
+    }
+  } catch(Exception $e){
+    \Drupal::logger('localgov_expired_events')->error($e->getMessage());
+  }
 }
+
+/**
+ * Helper function to content state.
+ */
+function _set_content_state($content_moderation_state, $entity, $state) {
+  // and check if there is workflow applied on the node.
+  // Set the node status according to the workflow.
+  if ($content_moderation_state) {
+    $workflow = $content_moderation_state->get('workflow')->entity;
+    $state_label = $workflow->get('type_settings')['states'];
+    if (in_array($state, array_keys($state_label))) {
+      $entity->setUnpublished(TRUE);
+      $entity->set('moderation_state' , $state);
+      $entity->save();
+    } 
+    else {
+      $entity->setUnpublished();
+      $entity->save();
+    }
+  }
+}
+

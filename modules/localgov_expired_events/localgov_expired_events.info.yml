@@ -1,5 +1,7 @@
 name: LocalGov Expired Events
-description: Archive or Unpublished Expired Events
+description: Archive or Unpublished Expired Events when cron is excuted.
 package: LocalGov Drupal
 type: module
 core_version_requirement: ^9 || ^10 ||  ^11
+dependencies:
+- localgov_event

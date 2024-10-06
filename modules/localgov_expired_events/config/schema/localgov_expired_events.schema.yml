@@ -1,16 +1,21 @@
 localgov_expired_events.settings:
   type: config_object
-  label: 'Expired Event module settings'
+  label: 'Expired Events module settings'
   mapping:
-    localgov_expired_events:
-      type: mapping
-      mapping:
-        action:
-          type: boolean
-          label: 'Action type'
-        expire_days:
-          type: int
-          label: 'number of days'
-        item_per_cron:
-          type: int
-          label: 'Items per cron'
+    action:
+      type: string
+      label: 'Action type'
+    expire_days:
+      type: int
+      label: 'number of days'
+      constraints:
+        Regex:
+          pattern: '/^[0-9]+$/'
+          message: 'Please enter numbers only'
+    items_per_cron:
+      type: int
+      label: 'Items per cron'
+      constraints:
+        Regex:
+          pattern: '/^[0-9]+$/'
+          message: 'Please enter numbers only'
