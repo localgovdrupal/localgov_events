@@ -13,3 +13,13 @@
   height: auto;
   margin: 0 1.5rem 1rem 0;
 }
+
+form[id^=views-exposed-form-localgov-events-listing-page-all-events] input[type=submit],
+form[id^=views-exposed-form-localgov-events-search-events-page] input[type=submit] {
+  margin-top: 1rem;
+}
+
+form[id^=views-exposed-form-localgov-events-listing-page-all-events] input[type=submit]:first-child,
+form[id^=views-exposed-form-localgov-events-search-events-page] input[type=submit]:first-child {
+  margin-top: 0;
+}
