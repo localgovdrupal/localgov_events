@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - finders_events
+  config:
+    - node.type.localgov_event
+    - node.type.localgov_event_channel
 id: localgov_events
 label: 'LocalGov Events'
 type: events
