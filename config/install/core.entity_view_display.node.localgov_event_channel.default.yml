@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.localgov_event_channel.body
+    - node.type.localgov_event_channel
+  module:
+    - text
+    - user
+id: node.localgov_event_channel.default
+targetEntityType: node
+bundle: localgov_event_channel
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  search_api_excerpt: true

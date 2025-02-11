@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - finders_events
+id: localgov_events
+label: 'LocalGov Events'
+type: events
+channels:
+  node:
+    - localgov_event_channel
+entries:
+  node:
+    - localgov_event

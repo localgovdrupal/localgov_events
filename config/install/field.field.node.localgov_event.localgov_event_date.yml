@@ -6,8 +6,6 @@ dependencies:
     - node.type.localgov_event
   module:
     - date_recur
-_core:
-  default_config_hash: Ie30UaIWVhe8pDrMV9O5Tol0LEvI0KIJktNLa6ndMac
 id: node.localgov_event.localgov_event_date
 field_name: localgov_event_date
 entity_type: node

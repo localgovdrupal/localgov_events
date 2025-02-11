@@ -1,0 +1,10 @@
+langcode: en
+status: false
+dependencies:
+  module:
+    - node
+id: node.finders_index
+label: 'Finders search index'
+description: 'The view mode used for indexing a Finder entry entity for full-text search.'
+targetEntityType: node
+cache: true

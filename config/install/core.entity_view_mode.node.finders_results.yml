@@ -1,0 +1,10 @@
+langcode: en
+status: false
+dependencies:
+  module:
+    - node
+id: node.finders_results
+label: 'Finders search results'
+description: 'The view mode used for Finders entries shown in channel lists.'
+targetEntityType: node
+cache: true

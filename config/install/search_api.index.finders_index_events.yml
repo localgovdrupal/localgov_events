@@ -1,0 +1,199 @@
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.node.finders_index
+  module:
+    - computed_field
+    - date_recur_search_api
+    - finders
+    - node
+id: finders_index_events
+name: Events
+description: 'Template search index for a Finders channel.'
+read_only: false
+field_settings:
+  finders_channels:
+    label: 'Finder channels'
+    datasource_id: 'date_recur:node__finders_events_date'
+    property_path: finders_channels
+    type: string
+    dependencies:
+      module:
+        - finders
+  finders_events_date_occurrence:
+    label: 'Date occurrence'
+    datasource_id: 'date_recur:node__finders_events_date'
+    property_path: finders_events_date_occurrence
+    type: date
+    dependencies:
+      module:
+        - computed_field
+  finders_title_sort:
+    label: 'Title (sort)'
+    datasource_id: 'date_recur:node__finders_events_date'
+    property_path: finders_title_sort
+    type: string
+    dependencies:
+      module:
+        - finders
+  rendered_item:
+    label: 'Rendered HTML output'
+    property_path: rendered_item
+    type: text
+    configuration:
+      roles:
+        - anonymous
+      view_mode:
+        'date_recur:node__finders_events_date':
+          localgov_event: finders_index
+  title:
+    label: Title
+    datasource_id: 'date_recur:node__finders_events_date'
+    property_path: title
+    type: text
+    boost: 5.0
+    dependencies:
+      module:
+        - node
+datasource_settings:
+  'date_recur:node__finders_events_date':
+    pre_create: P2Y
+    bundles:
+      default: false
+      selected:
+        - localgov_event
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  custom_value: {  }
+  entity_status: {  }
+  entity_type: {  }
+  highlight:
+    weights:
+      postprocess_query: 0
+    prefix: '<strong>'
+    suffix: '</strong>'
+    excerpt: true
+    excerpt_always: false
+    excerpt_length: 256
+    exclude_fields: {  }
+    highlight: always
+    highlight_partial: false
+  html_filter:
+    weights:
+      preprocess_index: -15
+      preprocess_query: -15
+    all_fields: false
+    fields:
+      - rendered_item
+      - title
+    title: true
+    alt: true
+    tags:
+      b: 2
+      h1: 5
+      h2: 3
+      h3: 2
+      strong: 2
+  ignorecase:
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
+    all_fields: true
+    fields:
+      - finders_channels
+      - finders_title_sort
+      - rendered_item
+      - title
+  language_with_fallback: {  }
+  rendered_item: {  }
+  stemmer:
+    weights:
+      preprocess_index: 0
+      preprocess_query: 0
+    all_fields: true
+    fields:
+      - rendered_item
+      - title
+    exceptions:
+      mexican: mexic
+      texan: texa
+  stopwords:
+    weights:
+      preprocess_index: -5
+      preprocess_query: -2
+    all_fields: true
+    fields:
+      - rendered_item
+      - title
+    stopwords:
+      - a
+      - an
+      - and
+      - are
+      - as
+      - at
+      - be
+      - but
+      - by
+      - for
+      - if
+      - in
+      - into
+      - is
+      - it
+      - 'no'
+      - not
+      - of
+      - 'on'
+      - or
+      - s
+      - such
+      - t
+      - that
+      - the
+      - their
+      - then
+      - there
+      - these
+      - they
+      - this
+      - to
+      - was
+      - will
+      - with
+  tokenizer:
+    weights:
+      preprocess_index: -6
+      preprocess_query: -6
+    all_fields: true
+    fields:
+      - rendered_item
+      - title
+    spaces: ''
+    ignored: ._-
+    overlap_cjk: 1
+    minimum_word_size: '3'
+  transliteration:
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
+    all_fields: true
+    fields:
+      - finders_channels
+      - finders_title_sort
+      - rendered_item
+      - title
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  cron_limit: 50
+  delete_on_fail: true
+  index_directly: true
+  track_changes_in_references: true
+server: null
