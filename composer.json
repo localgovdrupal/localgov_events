@@ -6,9 +6,8 @@
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
     "require": {
-        "drupal/facets": "^2.0",
-        "drupal/finders": "1.0.x-dev",
         "drupal/finders_events": "1.0.x-dev",
+        "drupal/finders_facets": "1.0.x-dev",
         "localgovdrupal/localgov_core": "^2.12",
         "localgovdrupal/localgov_geo": "^2.0",
         "rlanvin/php-rrule": "^1.0|^2.0"

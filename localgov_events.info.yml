@@ -11,8 +11,8 @@ dependencies:
   - drupal:taxonomy
   - drupal:views
   # Contrib
-  - facets:facets
   - finders_events:finders_events
+  - finders_facets:finders_facets
   - field_group:field_group
   - inline_entity_form:inline_entity_form
   # LocalGov Drupal
