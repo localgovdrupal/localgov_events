@@ -1,11 +1,15 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - finders_events
   config:
     - node.type.localgov_event
     - node.type.localgov_event_channel
+  module:
+    - finders_events
+    - finders_facets
+third_party_settings:
+  finders_facets:
+    facets: true
 id: localgov_events
 label: 'LocalGov Events'
 type: events

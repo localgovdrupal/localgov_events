@@ -7,6 +7,7 @@ dependencies:
   module:
     - path
     - text
+    - viewsreference
 id: node.localgov_event_channel.default
 targetEntityType: node
 bundle: localgov_event_channel
@@ -26,6 +27,24 @@ content:
     type: datetime_timestamp
     weight: 10
     region: content
+    settings: {  }
+    third_party_settings: {  }
+  finders_channel_types:
+    type: options_buttons
+    region: content
+    weight: 122
+    settings: {  }
+    third_party_settings: {  }
+  finders_events_cal_view:
+    type: viewsreference_select
+    region: content
+    weight: 124
+    settings: {  }
+    third_party_settings: {  }
+  finders_events_list_view:
+    type: viewsreference_select
+    region: content
+    weight: 123
     settings: {  }
     third_party_settings: {  }
   path:

@@ -6,13 +6,13 @@ dependencies:
     - field.field.node.localgov_event.body
     - field.field.node.localgov_event.localgov_event_call_to_action
     - field.field.node.localgov_event.localgov_event_categories
-    - field.field.node.localgov_event.localgov_event_date
     - field.field.node.localgov_event.localgov_event_image
     - field.field.node.localgov_event.localgov_event_locality
     - field.field.node.localgov_event.localgov_event_location
     - field.field.node.localgov_event.localgov_event_price
     - node.type.localgov_event
   module:
+    - datetime_range
     - text
     - user
 id: node.localgov_event.search_index
@@ -27,11 +27,21 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  finders_events_date_occurrence:
+    weight: 0
+    region: content
+    label: above
+    settings:
+      from_to: both
+      separator: '-'
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: daterange_default
 hidden:
   links: true
   localgov_event_call_to_action: true
   localgov_event_categories: true
-  localgov_event_date: true
   localgov_event_image: true
   localgov_event_locality: true
   localgov_event_location: true

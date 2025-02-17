@@ -7,7 +7,6 @@ dependencies:
     - field.field.node.localgov_event.body
     - field.field.node.localgov_event.localgov_event_call_to_action
     - field.field.node.localgov_event.localgov_event_categories
-    - field.field.node.localgov_event.localgov_event_date
     - field.field.node.localgov_event.localgov_event_image
     - field.field.node.localgov_event.localgov_event_locality
     - field.field.node.localgov_event.localgov_event_location
@@ -15,6 +14,7 @@ dependencies:
     - node.type.localgov_event
   module:
     - date_recur
+    - datetime_range
     - link
     - text
     - user
@@ -30,6 +30,17 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  finders_events_date_occurrence:
+    weight: 0
+    region: content
+    label: above
+    settings:
+      from_to: both
+      separator: '-'
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: daterange_default
   localgov_event_call_to_action:
     weight: 2
     label: hidden
@@ -41,21 +52,6 @@ content:
       target: '0'
     third_party_settings: {  }
     type: link
-    region: content
-  localgov_event_date:
-    weight: 1
-    label: hidden
-    settings:
-      format_type: localgov_event_date_full
-      occurrence_format_type: localgov_event_date_full
-      same_end_date_format_type: localgov_event_date_hour
-      separator: to
-      timezone_override: ''
-      interpreter: ''
-      show_next: 10
-      count_per_item: false
-    third_party_settings: {  }
-    type: date_recur_basic_formatter
     region: content
   localgov_event_image:
     type: entity_reference_entity_view
