@@ -10,7 +10,7 @@ third_party_settings:
     parent: 'main:'
 name: 'Event Channel'
 type: localgov_event_channel
-description: null
+description: 'A listing of events. You can have multiple listings, and choose which listing events appear in.'
 help: null
 new_revision: true
 preview_mode: 1

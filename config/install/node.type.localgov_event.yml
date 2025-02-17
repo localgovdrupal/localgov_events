@@ -4,7 +4,7 @@ dependencies: {  }
 third_party_settings: {  }
 name: Event
 type: localgov_event
-description: 'An event to appear in the events listing and optionally integrate into a directory.'
+description: 'An event to appear in the events listings.'
 help: ''
 new_revision: true
 preview_mode: 1
