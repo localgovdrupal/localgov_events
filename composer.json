@@ -19,8 +19,12 @@
             "drupal/core": "-p2"
         },
         "patches": {
+            "drupal/date_recur": {
+                "Views data produces a warning #3486727": "https://www.drupal.org/files/issues/2025-02-16/3486727.date_recur.3-8-x.bundle-fields-views-data-errors.patch"
+            },
             "drupal/date_recur_modular": {
-                "Date validation #3154944": "https://www.drupal.org/files/issues/2020-06-25/alpha-modal-form-end-date-validation.patch"            }
+                "Date validation #3154944": "https://www.drupal.org/files/issues/2020-06-25/alpha-modal-form-end-date-validation.patch"
+            }
         }
     }
 }
