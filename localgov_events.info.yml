@@ -11,6 +11,7 @@ dependencies:
   - drupal:taxonomy
   - drupal:views
   # Contrib
+  - finders_db:finders_db
   - finders_events:finders_events
   - finders_facets:finders_facets
   - field_group:field_group
