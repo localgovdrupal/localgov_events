@@ -15,7 +15,7 @@
         "rlanvin/php-rrule": "^1.0|^2.0"
     },
     "require-dev": {
-        "localgovdrupal/localgov_directories": "^3.0"
+        "localgovdrupal/localgov_directories": "dev-feature/3.x/394-drupal-11-support as 3.2.2"
     },
     "extra": {
         "enable-patching": true,
