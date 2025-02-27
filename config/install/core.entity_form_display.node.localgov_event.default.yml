@@ -16,6 +16,7 @@ dependencies:
     - entity_browser
     - field_group
     - finders
+    - finders_facets
     - link
     - media_library
     - path
@@ -86,6 +87,7 @@ third_party_settings:
         required_fields: true
     group_facets:
       children:
+        - finders_facets_select
         - localgov_event_price
         - localgov_event_locality
         - localgov_event_categories
@@ -133,6 +135,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  finders_facets_select:
+    type: finders_facets_checkbox
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   finders_title_sort:
     type: string_textfield
     weight: 2
@@ -151,7 +159,7 @@ content:
     third_party_settings: {  }
   localgov_event_categories:
     type: entity_reference_autocomplete
-    weight: 10
+    weight: 4
     region: content
     settings:
       match_operator: CONTAINS
@@ -168,7 +176,7 @@ content:
     third_party_settings: {  }
   localgov_event_locality:
     type: options_select
-    weight: 9
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -188,7 +196,7 @@ content:
     third_party_settings: {  }
   localgov_event_price:
     type: options_select
-    weight: 7
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -2,8 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.date_format.localgov_event_date_full
-    - core.date_format.localgov_event_date_hour
     - field.field.node.localgov_event.body
     - field.field.node.localgov_event.localgov_event_call_to_action
     - field.field.node.localgov_event.localgov_event_categories
@@ -13,7 +11,6 @@ dependencies:
     - field.field.node.localgov_event.localgov_event_price
     - node.type.localgov_event
   module:
-    - date_recur
     - datetime_range
     - link
     - text

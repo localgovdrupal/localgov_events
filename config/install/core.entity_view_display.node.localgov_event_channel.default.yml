@@ -5,6 +5,7 @@ dependencies:
     - field.field.node.localgov_event_channel.body
     - node.type.localgov_event_channel
   module:
+    - finders
     - text
     - user
 id: node.localgov_event_channel.default
@@ -19,6 +20,22 @@ content:
     third_party_settings: {  }
     weight: 101
     region: content
+  finders_events_cal_view:
+    type: finders_channel_view
+    region: content
+    weight: 103
+    label: above
+    settings:
+      show_filters: false
+    third_party_settings: {  }
+  finders_events_list_view:
+    type: finders_channel_view
+    region: content
+    weight: 102
+    label: above
+    settings:
+      show_filters: false
+    third_party_settings: {  }
   links:
     settings: {  }
     third_party_settings: {  }

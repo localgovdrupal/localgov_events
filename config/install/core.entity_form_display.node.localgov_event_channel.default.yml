@@ -47,6 +47,12 @@ content:
     weight: 123
     settings: {  }
     third_party_settings: {  }
+  finders_facets_enable:
+    type: options_buttons
+    region: content
+    weight: 125
+    settings: {  }
+    third_party_settings: {  }
   path:
     type: path
     weight: 30

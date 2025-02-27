@@ -1,25 +1,21 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - search_api.index.finders_index_events
+    - views.view.finders_events_channel_calendar
+  module:
+    - search_api
 id: finders_index_events_finders_events_channel_calendar
 name: 'Finders - Events - finders_events_channel_calendar'
+url_alias: finders_facets
 weight: 0
 min_count: 1
 missing: false
 missing_label: others
-url_alias: finders_facets
-facet_source_id: 'search_api:views_embed__finders_events_channel_calendar__channel_embed'
+show_only_one_result: false
 field_identifier: finders_facets_filter
-query_operator: or
-hard_limit: 0
-exclude: false
-use_hierarchy: false
-keep_hierarchy_parents_active: false
-hierarchy:
-  type: taxonomy
-  config: {  }
-expand_hierarchy: false
-enable_parent_when_child_gets_disabled: true
+facet_source_id: 'search_api:views_embed__finders_events_channel_calendar__channel_embed'
 widget:
   type: checkbox
   config:
@@ -31,11 +27,17 @@ widget:
     soft_limit_settings:
       show_less_label: 'Show less'
       show_more_label: 'Show more'
-empty_behavior:
-  behavior: none
+query_operator: or
+use_hierarchy: false
+keep_hierarchy_parents_active: false
+hierarchy:
+  type: taxonomy
+  config: {  }
+expand_hierarchy: false
+enable_parent_when_child_gets_disabled: true
+hard_limit: 0
+exclude: false
 only_visible_when_facet_source_is_visible: false
-show_only_one_result: false
-show_title: false
 processor_configs:
   active_widget_order:
     processor_id: active_widget_order
@@ -75,3 +77,6 @@ processor_configs:
     weights:
       pre_query: 35
     settings: {  }
+empty_behavior:
+  behavior: none
+show_title: false
