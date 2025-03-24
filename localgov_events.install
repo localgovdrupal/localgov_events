@@ -5,6 +5,7 @@
  * LocalGov Events install file.
  */
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -71,5 +72,26 @@ function localgov_events_update_8002() {
   if ($config->get('pattern') == 'l, jS F Y, g.ia') {
     $config->set('pattern', 'l j F Y, g.ia');
     $config->save(TRUE);
+  }
+}
+
+/**
+ * Set default timezone correctly.
+ *
+ * @see localgovdrupal/localgov_evenst#184
+ */
+function localgov_events_update_8003() {
+  $field = FieldConfig::load('node.localgov_event.localgov_event_date');
+  $default_values = $field->getDefaultValueLiteral();
+  $changed = FALSE;
+  foreach ($default_values as $delta => $value) {
+    if (!isset($value['default_time_zone_source'])) {
+      $default_values[$delta]['default_time_zone_source'] = 'fixed';
+      $changed = TRUE;
+    }
+  }
+  if ($changed) {
+    $field->setDefaultValue($default_values);
+    $field->save();
   }
 }
