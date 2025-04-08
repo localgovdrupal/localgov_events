@@ -20,7 +20,8 @@ Facets are used to filter content, but unlike regular filters, they derive the l
 This means that using a facet only show relevant filtering options and will never produce zero results.
 
 To set up facets you need to create some facet types. For example, if you want to filter your events by an age range, go to Structure -> Finders Facet Types and click "Add Finders Facer Type". Then type "Age range" into the Name field and save the form. The Description field on this page is optional, and is only seen by site admins. Put a description of what the facet represents here if you like.
-Then go to Content -> Finders facets and click the "Add Finders Facet" button. Choose "Age range" from the list you're presented with. On the next page, type the age range itself (EG 0 to 2 years) in the Title field and save the page. Repeat these steps to add as many facet values as you like.
+
+Then go to Content -> Finders facets and click the "Add Finders Facet" button. If you have more than one Finder Facet you will be presented with a list : choose "Age range" from that list. If this is your first Finder Facet Type you will go straight to the 'Add finders facet' page. On this page type the age range itself (EG 0 to 2 years) in the Title field and save the page. Repeat these steps to add as many facet values as you like.
 
 The next step is to set up an event channel.
 Go to Content -> Add content -> Event Channel.
