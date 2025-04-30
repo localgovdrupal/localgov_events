@@ -5,11 +5,8 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.localgov_event.body
     - field.field.node.localgov_event.localgov_event_call_to_action
-    - field.field.node.localgov_event.localgov_event_categories
     - field.field.node.localgov_event.localgov_event_image
-    - field.field.node.localgov_event.localgov_event_locality
     - field.field.node.localgov_event.localgov_event_location
-    - field.field.node.localgov_event.localgov_event_price
     - node.type.localgov_event
   module:
     - datetime_range
@@ -51,8 +48,5 @@ content:
 hidden:
   links: true
   localgov_event_call_to_action: true
-  localgov_event_categories: true
-  localgov_event_locality: true
   localgov_event_location: true
-  localgov_event_price: true
   search_api_excerpt: true

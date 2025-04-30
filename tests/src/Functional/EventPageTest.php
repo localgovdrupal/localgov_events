@@ -108,11 +108,8 @@ class EventPageTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('body');
     $this->assertSession()->pageTextContains('localgov_event_call_to_action');
-    $this->assertSession()->pageTextContains('localgov_event_categories');
     $this->assertSession()->pageTextContains('localgov_event_date');
     $this->assertSession()->pageTextContains('localgov_event_image');
-    $this->assertSession()->pageTextContains('localgov_event_locality');
-    $this->assertSession()->pageTextContains('localgov_event_price');
     $this->assertSession()->pageTextNotContains('localgov_event_provider');
     $this->assertSession()->pageTextNotContains('localgov_event_venue');
 

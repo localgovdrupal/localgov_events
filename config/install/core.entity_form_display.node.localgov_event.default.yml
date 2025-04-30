@@ -5,11 +5,8 @@ dependencies:
     - entity_browser.browser.geo_entity_library
     - field.field.node.localgov_event.body
     - field.field.node.localgov_event.localgov_event_call_to_action
-    - field.field.node.localgov_event.localgov_event_categories
     - field.field.node.localgov_event.localgov_event_image
-    - field.field.node.localgov_event.localgov_event_locality
     - field.field.node.localgov_event.localgov_event_location
-    - field.field.node.localgov_event.localgov_event_price
     - node.type.localgov_event
   module:
     - date_recur_modular
@@ -88,9 +85,6 @@ third_party_settings:
     group_facets:
       children:
         - finders_facets_select
-        - localgov_event_price
-        - localgov_event_locality
-        - localgov_event_categories
       label: Facets
       region: content
       parent_name: group_tags
@@ -157,28 +151,12 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-  localgov_event_categories:
-    type: entity_reference_autocomplete
-    weight: 4
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   localgov_event_image:
     type: media_library_widget
     weight: 5
     region: content
     settings:
       media_types: {  }
-    third_party_settings: {  }
-  localgov_event_locality:
-    type: options_select
-    weight: 3
-    region: content
-    settings: {  }
     third_party_settings: {  }
   localgov_event_location:
     type: entity_browser_entity_reference
@@ -193,12 +171,6 @@ content:
       open: true
       field_widget_display_settings: {  }
       selection_mode: selection_append
-    third_party_settings: {  }
-  localgov_event_price:
-    type: options_select
-    weight: 2
-    region: content
-    settings: {  }
     third_party_settings: {  }
   path:
     type: path
