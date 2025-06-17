@@ -6,12 +6,12 @@
 (function localgovEventsDatePickerScript($) {
   Drupal.behaviors.localgovEventsDatePicker = {
     attach: function attach() {
-      $('.js-date-picker').on('change', function () {
+      $('.js-date-picker').on('change', (event) => {
         let startDate = null;
         let endDate = null;
         const today = new Date();
 
-        switch (this.value) {
+        switch (event.target.value) {
           case 'today': {
             startDate = today;
             endDate = today;
