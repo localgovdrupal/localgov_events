@@ -3,75 +3,77 @@
  * Events date picker functionality.
  */
 
-(function ($) {
+(function localgovEventsDatePickerScript($) {
   Drupal.behaviors.localgovEventsDatePicker = {
-    attach: function attach(context, settings) {
+    attach: function attach() {
       $('.js-date-picker').on('change', function () {
-        let start_date = null;
-        let end_date = null;
+        let startDate = null;
+        let endDate = null;
         const today = new Date();
 
         switch (this.value) {
-          case 'today':
-            start_date = today;
-            end_date = today;
+          case 'today': {
+            startDate = today;
+            endDate = today;
             break;
+          }
 
-          case 'tomorrow':
+          case 'tomorrow': {
             const tomorrow = today.setDate(today.getDate() + 1);
-            start_date = new Date(tomorrow);
-            end_date = new Date(tomorrow);
+            startDate = new Date(tomorrow);
+            endDate = new Date(tomorrow);
             break;
+          }
 
-          case 'this_week':
+          case 'this_week': {
             // First day is the day of the month - the day of the week.
             const first = today.getDate() - today.getDay() + 1;
             // Last day is the first day + 6.
             const last = first + 6;
-            start_date = new Date(today.setDate(first));
-            end_date = new Date(today.setDate(last));
+            startDate = new Date(today.setDate(first));
+            endDate = new Date(today.setDate(last));
             break;
+          }
 
-          case 'this_month':
-            start_date = new Date(today.getFullYear(), today.getMonth(), 1, 1);
-            end_date = new Date(
-              today.getFullYear(),
-              today.getMonth() + 1,
-              0,
-              1,
-            );
+          case 'this_month': {
+            startDate = new Date(today.getFullYear(), today.getMonth(), 1, 1);
+            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0, 1);
             break;
+          }
 
-          case 'next_month':
+          case 'next_month': {
             if (today.getMonth() < 11) {
-              start_date = new Date(
+              startDate = new Date(
                 today.getFullYear(),
                 today.getMonth() + 1,
                 1,
                 1,
               );
-              end_date = new Date(
+              endDate = new Date(
                 today.getFullYear(),
                 today.getMonth() + 2,
                 0,
                 1,
               );
             } else {
-              start_date = new Date(today.getFullYear() + 1, 0, 1, 1);
-              end_date = new Date(today.getFullYear() + 1, 1, 0, 1);
+              startDate = new Date(today.getFullYear() + 1, 0, 1, 1);
+              endDate = new Date(today.getFullYear() + 1, 1, 0, 1);
             }
             break;
+          }
+          default: {
+            startDate = null;
+            endDate = null;
+          }
         }
 
-        if (start_date) {
-          $('.js-date-picker-start').val(
-            start_date.toISOString().substr(0, 10),
-          );
+        if (startDate) {
+          $('.js-date-picker-start').val(startDate.toISOString().substr(0, 10));
         } else {
           $('.js-date-picker-start').val('');
         }
-        if (end_date) {
-          $('.js-date-picker-end').val(end_date.toISOString().substr(0, 10));
+        if (endDate) {
+          $('.js-date-picker-end').val(endDate.toISOString().substr(0, 10));
         } else {
           $('.js-date-picker-end').val('');
         }
