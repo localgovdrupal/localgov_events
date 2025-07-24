@@ -1,45 +1,62 @@
 <?php
 
+/**
+ * @file
+ * Provides event deletion/archiving support.
+ */
+
 use Drupal\content_moderation\Entity\ContentModerationState;
-use \Drupal\node\Entity\Node;
+
 /**
  * @file
  * Contains localgove_expired_events.module.
  */
 
 /**
- * Implement hook_cron().
+ * Implements hook_cron().
  */
 function localgov_expired_events_cron() {
+
   $config = \Drupal::config('localgov_expired_events.settings');
   $expire_days = $config->get('expire_days');
   $items_per_cron = $config->get('items_per_cron');
   $action = $config->get('action');
 
   try {
-    // Query all 
+
     $database = \Drupal::database();
-    $query = $database->select('date_recur__node__localgov_event_date', 'dr');
-    $query->join('node_field_data','nfd','dr.entity_id = nfd.nid');
-    $query->fields('dr');
-    if ($action == "unpublished") {
-      $query->condition('nfd.status', 1);
-    }
-    $query->where('DATE_ADD(dr.localgov_event_date_end_value, INTERVAL :day DAY) < NOW()', array(':day' => $expire_days));
-    if ($items_per_cron > 0 ) {
+
+    // Get the set of events that are ongoing or future.
+    $subquery = $database->select('date_recur__node__localgov_event_date', 'dr')
+      ->distinct()
+      ->fields('dr', ['entity_id'])
+      // Increase the end date by the number of days expired.
+      // if more than now, its in the future.
+      ->where('DATE_ADD(dr.localgov_event_date_end_value, INTERVAL :day DAY) >= NOW()', [':day' => $expire_days]);
+
+    // Get the set of events that are expired.
+    $query = $database->select('date_recur__node__localgov_event_date', 'dr')
+      ->distinct()
+      ->fields('dr', ['entity_id'])
+      // Increase the end date by the number of days expired.
+      // if less than now, its in the past.
+      ->where('DATE_ADD(dr.localgov_event_date_end_value, INTERVAL :day DAY) < NOW()', [':day' => $expire_days]);
+
+    // Exclude expired events from ongoing or future set of events.
+    $query->condition('dr.localgov_event_date_end_value', $subquery, 'AND entity_id NOT IN');
+    if ($items_per_cron > 0) {
       $query->range(0, $items_per_cron);
     }
     $results = $query->execute()->fetchAll();
 
-
-    // Loop through returned record,
+    // Loop through returned record,.
     if (!empty($results)) {
       foreach ($results as $record) {
         if (!empty($record->entity_id)) {
           $entity = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
           $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
           if ($action == 'unpublished' || $action == 'archived') {
-            _set_content_state($content_moderation_state, $entity, $action);
+            localgov_expired_events__set_content_state($content_moderation_state, $entity, $action);
           }
           elseif ($action == 'delete') {
             $entity->delete();
@@ -47,7 +64,8 @@ function localgov_expired_events_cron() {
         }
       }
     }
-  } catch(Exception $e){
+  }
+  catch (Exception $e) {
     \Drupal::logger('localgov_expired_events')->error($e->getMessage());
   }
 }
@@ -55,21 +73,21 @@ function localgov_expired_events_cron() {
 /**
  * Helper function to content state.
  */
-function _set_content_state($content_moderation_state, $entity, $state) {
-  // and check if there is workflow applied on the node.
+function localgov_expired_events__set_content_state($content_moderation_state, $entity, $state) {
+  // And check if there is workflow applied on the node.
   // Set the node status according to the workflow.
   if ($content_moderation_state) {
     $workflow = $content_moderation_state->get('workflow')->entity;
     $state_label = $workflow->get('type_settings')['states'];
     if (in_array($state, array_keys($state_label))) {
       $entity->setUnpublished(TRUE);
-      $entity->set('moderation_state' , $state);
+      $entity->set('moderation_state', $state);
       $entity->save();
-    } 
+    }
     else {
       $entity->setUnpublished();
       $entity->save();
     }
+    \Drupal::logger('localgov_expired_events')->info('The status of event id = ' . $entity->id() . ' has been changed to ' . $state . ' state.');
   }
 }
-
