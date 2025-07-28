@@ -4,7 +4,7 @@
  * @file
  * Provides event deletion/archiving support.
  */
-
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\content_moderation\Entity\ContentModerationState;
 
 /**
@@ -17,36 +17,47 @@ use Drupal\content_moderation\Entity\ContentModerationState;
  */
 function localgov_expired_events_cron() {
 
+
+  // @todo set config default values for expire_days, items_per_cron and action.
   $config = \Drupal::config('localgov_expired_events.settings');
-  $expire_days = $config->get('expire_days');
+  $noOfDaysToExpire = $config->get('expire_days');
   $items_per_cron = $config->get('items_per_cron');
   $action = $config->get('action');
 
   try {
+    // @todo test the correct timezone.
+    $date = new DrupalDateTime('now');
+    $date->modify("+$noOfDaysToExpire days");
+    // Format the date to match the database format.
+    $expiration_date = $date->format('Y-m-d\TH:i:s');
 
     $database = \Drupal::database();
 
     // Get the set of events that are ongoing or future.
     $subquery = $database->select('date_recur__node__localgov_event_date', 'dr')
-      ->distinct()
+      ->distinct(TRUE)
       ->fields('dr', ['entity_id'])
       // Increase the end date by the number of days expired.
       // if more than now, its in the future.
-      ->where('DATE_ADD(dr.localgov_event_date_end_value, INTERVAL :day DAY) >= NOW()', [':day' => $expire_days]);
+      // ->where('DATE_ADD(dr.localgov_event_date_end_value, INTERVAL :day DAY) >= NOW()', [':day' => $expire_days]);
+      ->where("dr.localgov_event_date_end_value >= '" . $expiration_date . "'");
 
     // Get the set of events that are expired.
-    $query = $database->select('date_recur__node__localgov_event_date', 'dr')
-      ->distinct()
-      ->fields('dr', ['entity_id'])
+    $query = $database->select('date_recur__node__localgov_event_date', 'dr2')
+      ->distinct(TRUE)
+      ->fields('dr2', ['entity_id'])
       // Increase the end date by the number of days expired.
       // if less than now, its in the past.
-      ->where('DATE_ADD(dr.localgov_event_date_end_value, INTERVAL :day DAY) < NOW()', [':day' => $expire_days]);
+      // ->where('DATE_ADD(dr2.localgov_event_date_end_value, INTERVAL :day DAY) < NOW()', [':day' => $expire_days]);
+      ->where("dr2.localgov_event_date_end_value < '" . $expiration_date . "'");
+
 
     // Exclude expired events from ongoing or future set of events.
-    $query->condition('dr.localgov_event_date_end_value', $subquery, 'AND entity_id NOT IN');
+    $query->condition('dr2.localgov_event_date_end_value', $subquery, 'AND entity_id NOT IN');
     if ($items_per_cron > 0) {
-      $query->range(0, $items_per_cron);
+     $query->range(0, $items_per_cron);
     }
+
     $results = $query->execute()->fetchAll();
 
     // Loop through returned record,.
