@@ -53,7 +53,7 @@ function localgov_expired_events_cron() {
 
     $results = $query->execute()->fetchAll();
 
-    // Loop through returned record,.
+    // Loop through returned record.
     if (!empty($results)) {
       foreach ($results as $record) {
         if (!empty($record->entity_id)) {

@@ -8,11 +8,11 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
- * Confirm the module's date functionality works as intended.
+ * Confirm the module's date functionality works with expired events.
  *
  * @group localgov_expired_events
  */
-class DatesTest extends BrowserTestBase {
+class DatesExpiredTest extends BrowserTestBase {
 
   use CronRunTrait;
 
@@ -111,6 +111,7 @@ class DatesTest extends BrowserTestBase {
    */
   public function testExpiredEventArchived() {
 
+    // @todo remove hardcoded date.
     $event_date = [
       'value' => '2022-07-22T16:00:00',
       'end_value' => '2022-07-22T18:00:00',
@@ -133,6 +134,7 @@ class DatesTest extends BrowserTestBase {
     $this->drupalGet('node/' . $event->id());
     $this->assertSession()->statusCodeEquals(200, 'The event is not accessible.');
     $this->assertTrue($event->isPublished(), 'The event status is should be published.');
+    // @todo remove hardcoded date.
     $this->assertEquals("2022-07-22T18:00:00", $event->get('localgov_event_date')->end_value, 'Event end date is not correct.');
 
     // Set up the configuration to archive events.
