@@ -25,37 +25,39 @@ function localgov_expired_events_cron() {
   $action = $config->get('action');
 
   try {
-    // @todo test the correct timezone.
-    $date = new DrupalDateTime('now');
-    $date->modify("-$noOfDaysToExpire days");
+
+    $date = new DrupalDateTime('now', 'UTC');
+    $date->modify('midnight');
+    // Increase the date by the number of days to expire.
+    $date->modify("+$noOfDaysToExpire days");
     // Format the date to match the database format.
     $expiration_date = $date->format('Y-m-d\TH:i:s');
 
     $database = \Drupal::database();
 
     // Get the set of events that are ongoing or future.
-    $subquery = $database->select('date_recur__node__localgov_event_date', 'dr')
+    $futureEventQuery = $database->select('date_recur__node__localgov_event_date', 'dr')
       ->distinct(TRUE)
       ->fields('dr', ['entity_id'])
       ->where("dr.localgov_event_date_end_value >= '" . $expiration_date . "'");
-
+    // $futureEventList = $futureEventQuery->execute()->fetchAll();
     // Get the set of events that are expired.
-    $query = $database->select('date_recur__node__localgov_event_date', 'dr2')
+    $pastEventsQuery = $database->select('date_recur__node__localgov_event_date', 'dr2')
       ->distinct(TRUE)
       ->fields('dr2', ['entity_id'])
       ->where("dr2.localgov_event_date_end_value < '" . $expiration_date . "'");
-
+    // $pastEventList = $pastEventsQuery->execute()->fetchAll();
     // Exclude expired events from ongoing or future set of events.
-    $query->condition('dr2.localgov_event_date_end_value', $subquery, 'AND entity_id NOT IN');
+    $pastEventsQuery->condition('dr2.localgov_event_date_end_value', $futureEventQuery, 'AND entity_id NOT IN');
     if ($items_per_cron > 0) {
-      $query->range(0, $items_per_cron);
+      $pastEventsQuery->range(0, $items_per_cron);
     }
 
-    $results = $query->execute()->fetchAll();
+    $eventsOnlyInThePast = $pastEventsQuery->execute()->fetchAll();
 
     // Loop through returned record.
-    if (!empty($results)) {
-      foreach ($results as $record) {
+    if (!empty($eventsOnlyInThePast)) {
+      foreach ($eventsOnlyInThePast as $record) {
         if (!empty($record->entity_id)) {
           $entity = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
           $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
@@ -84,7 +86,7 @@ function localgov_expired_events__set_content_state($content_moderation_state, $
     $workflow = $content_moderation_state->get('workflow')->entity;
     $state_label = $workflow->get('type_settings')['states'];
     if (in_array($state, array_keys($state_label))) {
-      $entity->setUnpublished(TRUE);
+      // $entity->setUnpublished(TRUE);
       $entity->set('moderation_state', $state);
       $entity->save();
     }
