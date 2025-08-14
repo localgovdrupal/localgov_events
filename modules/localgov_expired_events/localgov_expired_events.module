@@ -35,18 +35,37 @@ function localgov_expired_events_cron() {
 
     $database = \Drupal::database();
 
-    // Get the set of events that are ongoing or future.
+    // check that the localgov_event node type exists.
+    $node_type = \Drupal::entityTypeManager()->getStorage('node_type')->load('localgov_event');
+    if (!$node_type) {
+      \Drupal::logger('localgov_expired_events')->error('The localgov_event node type does not exist.');
+      return;
+    }
+    // check that the localgov_event_date field exists.
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'localgov_event');
+    if (!isset($field_definitions['localgov_event_date'])) {
+      \Drupal::logger('localgov_expired_events')->error('The localgov_event_date field does not exist on the localgov_event node type.');
+      return;
+    }   
+    // check that the localgov_event_date field is a date_recur field.
+    if ($field_definitions['localgov_event_date']->getType() !== 'date_recur') {
+      \Drupal::logger('localgov_expired_events')->error('The localgov_event_date field is not a date_recur field.');
+      return;
+    }
+
+
+      // Get the set of events that are ongoing or future.
     $futureEventQuery = $database->select('date_recur__node__localgov_event_date', 'dr')
       ->distinct(TRUE)
       ->fields('dr', ['entity_id'])
       ->where("dr.localgov_event_date_end_value >= '" . $expiration_date . "'");
-    // $futureEventList = $futureEventQuery->execute()->fetchAll();
+
     // Get the set of events that are expired.
     $pastEventsQuery = $database->select('date_recur__node__localgov_event_date', 'dr2')
       ->distinct(TRUE)
       ->fields('dr2', ['entity_id'])
       ->where("dr2.localgov_event_date_end_value < '" . $expiration_date . "'");
-    // $pastEventList = $pastEventsQuery->execute()->fetchAll();
+
     // Exclude expired events from ongoing or future set of events.
     $pastEventsQuery->condition('dr2.localgov_event_date_end_value', $futureEventQuery, 'AND entity_id NOT IN');
     if ($items_per_cron > 0) {

@@ -175,7 +175,7 @@ class ExpiredEventsTest extends BrowserTestBase {
     // The past event should be unpublished.
     $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($past_event->id());
     // Check that the status is set to unpublished.
-    $this->assertEquals("0", $refreshed_event->get('status')->value, 'Pastevent status should be unpublished');
+    $this->assertEquals("0", $refreshed_event->get('status')->value, 'Past event status should be unpublished');
 
     // The future and recurring event should be unpublished.
     $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($future_event->id());
@@ -237,6 +237,7 @@ class ExpiredEventsTest extends BrowserTestBase {
       'moderation_state' => 'published',
     ]);
     $past_and_future_event->save();
+    
     $this->drupalGet('node/' . $past_and_future_event->id());
     $this->assertSession()->statusCodeEquals(200, 'The event is not accessible.');
     $this->assertTrue($past_and_future_event->isPublished(), 'The event status is should be published.');
