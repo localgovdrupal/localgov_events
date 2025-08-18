@@ -7,6 +7,7 @@
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\content_moderation\Entity\ContentModerationState;
+use Drupal\date_recur\DateRecurOccurrences;
 
 /**
  * @file
@@ -16,7 +17,7 @@ use Drupal\content_moderation\Entity\ContentModerationState;
 /**
  * Implements hook_cron().
  */
-function localgov_expired_events_cron() {
+function localgov_expired_events_cron(): void {
 
   // @todo set config default values for expire_days, items_per_cron and action.
   $config = \Drupal::config('localgov_expired_events.settings');
@@ -35,33 +36,36 @@ function localgov_expired_events_cron() {
 
     $database = \Drupal::database();
 
-    // check that the localgov_event node type exists.
+    // Check that the localgov_event node type exists.
     $node_type = \Drupal::entityTypeManager()->getStorage('node_type')->load('localgov_event');
     if (!$node_type) {
       \Drupal::logger('localgov_expired_events')->error('The localgov_event node type does not exist.');
       return;
     }
-    // check that the localgov_event_date field exists.
-    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'localgov_event');
-    if (!isset($field_definitions['localgov_event_date'])) {
+    // Check that the localgov_event_date field exists.
+    $fieldDefinitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'localgov_event');
+    if (!isset($fieldDefinitions['localgov_event_date'])) {
       \Drupal::logger('localgov_expired_events')->error('The localgov_event_date field does not exist on the localgov_event node type.');
       return;
-    }   
-    // check that the localgov_event_date field is a date_recur field.
-    if ($field_definitions['localgov_event_date']->getType() !== 'date_recur') {
+    }
+    // Check that the localgov_event_date field is a date_recur field.
+    if ($fieldDefinitions['localgov_event_date']->getType() !== 'date_recur') {
       \Drupal::logger('localgov_expired_events')->error('The localgov_event_date field is not a date_recur field.');
       return;
     }
 
+    // Get the table name for the date_recur occurrences.
+    $fieldStorageDefinitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('node');
+    $occurrenceTableName = DateRecurOccurrences::getOccurrenceCacheStorageTableName($fieldStorageDefinitions['localgov_event_date']);
 
-      // Get the set of events that are ongoing or future.
-    $futureEventQuery = $database->select('date_recur__node__localgov_event_date', 'dr')
+    // Get the set of events that are ongoing or future.
+    $futureEventQuery = $database->select($occurrenceTableName, 'dr')
       ->distinct(TRUE)
       ->fields('dr', ['entity_id'])
       ->where("dr.localgov_event_date_end_value >= '" . $expiration_date . "'");
 
     // Get the set of events that are expired.
-    $pastEventsQuery = $database->select('date_recur__node__localgov_event_date', 'dr2')
+    $pastEventsQuery = $database->select($occurrenceTableName, 'dr2')
       ->distinct(TRUE)
       ->fields('dr2', ['entity_id'])
       ->where("dr2.localgov_event_date_end_value < '" . $expiration_date . "'");
@@ -98,13 +102,13 @@ function localgov_expired_events_cron() {
 /**
  * Helper function to content state.
  */
-function localgov_expired_events__set_content_state($content_moderation_state, $entity, $state) {
+function localgov_expired_events__set_content_state($content_moderation_state, $entity, $state): void {
   // And check if there is workflow applied on the node.
   // Set the node status according to the workflow.
   if ($content_moderation_state) {
     $workflow = $content_moderation_state->get('workflow')->entity;
     $state_label = $workflow->get('type_settings')['states'];
-    if (in_array($state, array_keys($state_label))) {
+    if (in_array($state, array_keys($state_label), $strict = true)) {
       // $entity->setUnpublished(TRUE);
       $entity->set('moderation_state', $state);
       $entity->save();
@@ -115,4 +119,5 @@ function localgov_expired_events__set_content_state($content_moderation_state, $
     }
     \Drupal::logger('localgov_expired_events')->info('The status of event id = ' . $entity->id() . ' has been changed to ' . $state . ' state.');
   }
+
 }

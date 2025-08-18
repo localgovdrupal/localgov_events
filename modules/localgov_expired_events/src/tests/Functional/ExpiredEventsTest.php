@@ -117,7 +117,7 @@ class ExpiredEventsTest extends BrowserTestBase {
    * a recurring event that spans both
    * then runs cron to archive the past event.
    */
-  public function testArchiveEvents() {
+  public function testArchiveEvents(): void {
 
     // Set up the events.
     $past_event = $this->drupalCreateNode([
@@ -196,7 +196,7 @@ class ExpiredEventsTest extends BrowserTestBase {
    * a recurring event that spans both
    * then runs cron to archive the past event.
    */
-  public function testDeleteEvents() {
+  public function testDeleteEvents(): void {
 
     // Set up the events.
     $past_event = $this->drupalCreateNode([
@@ -237,7 +237,7 @@ class ExpiredEventsTest extends BrowserTestBase {
       'moderation_state' => 'published',
     ]);
     $past_and_future_event->save();
-    
+
     $this->drupalGet('node/' . $past_and_future_event->id());
     $this->assertSession()->statusCodeEquals(200, 'The event is not accessible.');
     $this->assertTrue($past_and_future_event->isPublished(), 'The event status is should be published.');
