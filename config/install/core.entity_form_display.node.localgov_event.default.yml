@@ -53,7 +53,7 @@ third_party_settings:
         description: ''
         formatter: closed
         required_fields: true
-      label: Details
+      label: Content
     group_date:
       children:
         - localgov_event_date
