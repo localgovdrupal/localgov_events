@@ -28,8 +28,8 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Action after Events are expired:'),
       '#options' => [
         'none' => $this->t('None'),
-        'unpublished' => $this->t('Unpublished'),
-        'archived' => $this->t('Archived'),
+        'unpublish' => $this->t('Unpublish'),
+        // 'archived' => $this->t('Archived'),
         'delete' => $this->t('Delete'),
       ],
       '#config_target' => 'localgov_expired_events.settings:action',

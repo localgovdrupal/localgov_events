@@ -5,8 +5,8 @@
  * Provides event deletion/archiving support.
  */
 
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\content_moderation\Entity\ContentModerationState;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\date_recur\DateRecurOccurrences;
 
 /**
@@ -83,16 +83,42 @@ function localgov_expired_events_cron(): void {
       foreach ($eventsOnlyInThePast as $record) {
         if (!empty($record->entity_id)) {
           $entity = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
-          $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
-          if ($action == 'unpublished' || $action == 'archived') {
-            localgov_expired_events__set_content_state($content_moderation_state, $entity, $action);
-          }
-          elseif ($action == 'delete') {
+
+          // Are we doing a straight delete?
+          if ($action == 'delete') {
+            $entityToDelete = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
             $entity->delete();
+            \Drupal::logger('localgov_expired_events')->info('The status of event id = ' . $entityToDelete . ' has been deleted.');
+          }
+          elseif ($action == 'unpublish') {
+
+            // If content moderation is enabled
+            // and the entity has a moderation state field.
+            // then set the moderation state to 'archived'.
+            $moduleHandler = \Drupal::service('module_handler');
+            if ($moduleHandler->moduleExists('content_moderation') && $entity->hasField('moderation_state')) {
+              $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
+              // In workflow terms unpublished equates to archived.
+              localgov_expired_events__set_content_state($content_moderation_state, $entity, 'archived');
+              \Drupal::logger('localgov_expired_events')->info('The status of event id = ' . $entity->id() . ' has been changed to archived.');
+            }
+            else {
+              // Handle non content moderation update by unpublishing.
+              $entity->setUnpublished();
+              $entity->save();
+              \Drupal::logger('localgov_expired_events')->info('Event id = ' . $entity->id() . ' has been unpublished.');
+            }
+          }
+          else {
+            \Drupal::logger('localgov_expired_events')->error('No action has been specified.');
           }
         }
       }
     }
+    else {
+      \Drupal::logger('localgov_expired_events')->info('No expired events found to process.');
+    }
+
   }
   catch (Exception $e) {
     \Drupal::logger('localgov_expired_events')->error($e->getMessage());
@@ -103,21 +129,15 @@ function localgov_expired_events_cron(): void {
  * Helper function to content state.
  */
 function localgov_expired_events__set_content_state($content_moderation_state, $entity, $state): void {
-  // And check if there is workflow applied on the node.
-  // Set the node status according to the workflow.
+  // Check if there is workflow applied on the node.
+  // Set the node status to archived.
   if ($content_moderation_state) {
     $workflow = $content_moderation_state->get('workflow')->entity;
     $state_label = $workflow->get('type_settings')['states'];
-    if (in_array($state, array_keys($state_label), $strict = true)) {
-      // $entity->setUnpublished(TRUE);
-      $entity->set('moderation_state', $state);
+    if (in_array($state, array_keys($state_label), $strict = TRUE)) {
+      $entity->set('moderation_state', 'archived');
       $entity->save();
     }
-    else {
-      $entity->setUnpublished();
-      $entity->save();
-    }
-    \Drupal::logger('localgov_expired_events')->info('The status of event id = ' . $entity->id() . ' has been changed to ' . $state . ' state.');
   }
 
 }

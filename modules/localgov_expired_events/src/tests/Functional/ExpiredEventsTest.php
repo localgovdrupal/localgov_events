@@ -7,6 +7,7 @@ namespace Drupal\Tests\localgov_expired_events\Functional;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\workflows\Entity\Workflow;
 
 /**
  * Confirm the module's date functionality works with expired events.
@@ -109,21 +110,21 @@ class ExpiredEventsTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that an expired event is archived.
+   * Tests that an expired event is unpublished.
    *
    * Creates 3 events
    * a past event
    * a future event,
    * a recurring event that spans both
-   * then runs cron to archive the past event.
+   * then runs cron to unpublish the past event.
    */
-  public function testArchiveEvents(): void {
+  public function testUnpublishEvents(): void {
 
     // Set up the events.
     $past_event = $this->drupalCreateNode([
       'type' => 'localgov_event',
-      'title' => 'Due to be archived.',
-      'body' => 'This event is in the past and should be archived.',
+      'title' => 'Due to be unpublished.',
+      'body' => 'This event is in the past and should be unpublished.',
       'status' => 1,
       'localgov_event_date' => $this->getPastDate(),
       'moderation_state' => 'published',
@@ -166,7 +167,7 @@ class ExpiredEventsTest extends BrowserTestBase {
     $config = \Drupal::configFactory()->getEditable('localgov_expired_events.settings');
     $config->set('expire_days', 1)
       ->set('items_per_cron', 3)
-      ->set('action', 'archived')
+      ->set('action', 'unpublish')
       ->save();
 
     // Run cron to process expired events.
@@ -174,27 +175,25 @@ class ExpiredEventsTest extends BrowserTestBase {
 
     // The past event should be unpublished.
     $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($past_event->id());
-    // Check that the status is set to unpublished.
+
     $this->assertEquals("0", $refreshed_event->get('status')->value, 'Past event status should be unpublished');
 
-    // The future and recurring event should be unpublished.
+    // The future and recurring event should be published.
     $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($future_event->id());
-    // Check that the status is set to unpublished.
     $this->assertEquals("1", $refreshed_event->get('status')->value, 'Future event status should be published');
     $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($past_and_future_event->id());
-    // Check that the status is set to unpublished.
     $this->assertEquals("1", $refreshed_event->get('status')->value, 'Past/future event status should be published');
 
   }
 
   /**
-   * Tests that an expired event is archived.
+   * Tests that an expired event is deleted.
    *
    * Creates 3 events
    * a past event
    * a future event,
    * a recurring event that spans both
-   * then runs cron to archive the past event.
+   * then runs cron to delete the past event.
    */
   public function testDeleteEvents(): void {
 
@@ -267,7 +266,7 @@ class ExpiredEventsTest extends BrowserTestBase {
   private function getPastDate(): array {
     $date = new DrupalDateTime('now', 'UTC');
     $date->modify('midnight');
-    // Decrease the date by one day to set in the past.
+    // Set date in the past, allowing for expire_days.
     $start_date = $date->modify("-2 days")->format('Y-m-d\TH:i:s');
     $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
 
@@ -286,7 +285,7 @@ class ExpiredEventsTest extends BrowserTestBase {
 
     $date = new DrupalDateTime('now', 'UTC');
     $date->modify('midnight');
-    // Increase the date by one day to set in the past.
+    // Set date in the past, allowing for expire_days.
     $start_date = $date->modify("+1 days")->format('Y-m-d\TH:i:s');
     $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
 
@@ -306,7 +305,7 @@ class ExpiredEventsTest extends BrowserTestBase {
   private function getPastAndFutureDate(): array {
     $date = new DrupalDateTime('now', 'UTC');
     $date->modify('midnight');
-    // Decrease the date by one day to set in the past.
+    // Set date in the past, allowing for expire_days.
     $start_date = $date->modify("-2 days")->format('Y-m-d\TH:i:s');
     $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
     return [
@@ -316,6 +315,86 @@ class ExpiredEventsTest extends BrowserTestBase {
       'infinite' => 0,
       'rrule' => 'FREQ=DAILY;COUNT=10',
     ];
+  }
+
+  /**
+   * Tests that an expired event is unpublished.
+   *
+   * Creates 3 events
+   * a past event
+   * a future event,
+   * a recurring event that spans both
+   * then runs cron to unpublish the past event.
+   */
+  public function testUnpublishEventsNonWorkflow(): void {
+
+    // Remove the workflow from the localgov_event content type.
+    $entity = Workflow::load('localgov_editorial');
+    $type = $entity->getTypePlugin();
+    $type->removeEntityTypeAndBundle('node', 'localgov_event');
+    $entity->save();
+
+    // Set up the events.
+    $past_event = $this->drupalCreateNode([
+      'type' => 'localgov_event',
+      'title' => 'Due to be unpublished.',
+      'body' => 'This event is in the past and should be unpublished.',
+      'status' => 1,
+      'localgov_event_date' => $this->getPastDate(),
+    ]);
+    $past_event->save();
+
+    $this->drupalGet('node/' . $past_event->id());
+    $this->assertSession()->statusCodeEquals(200, 'The event is not accessible.');
+    $this->assertTrue($past_event->isPublished(), 'The event status is should be published.');
+
+    $future_event = $this->drupalCreateNode([
+      'type' => 'localgov_event',
+      'title' => 'Future event.',
+      'body' => 'This event is in the future event and should remain.',
+      'status' => 1,
+      'localgov_event_date' => $this->getFutureDate(),
+    ]);
+    $future_event->save();
+
+    $this->drupalGet('node/' . $future_event->id());
+    $this->assertSession()->statusCodeEquals(200, 'The event is not accessible.');
+    $this->assertTrue($future_event->isPublished(), 'The event status is should be published.');
+
+    // Create a 10 day recurring event with dates in the past and future.
+    $past_and_future_event = $this->drupalCreateNode([
+      'type' => 'localgov_event',
+      'title' => 'Recurring with future events.',
+      'body' => 'This event has occurrences in the future and should remain.',
+      'status' => 1,
+      'localgov_event_date' => $this->getPastAndFutureDate(),
+    ]);
+    $past_and_future_event->save();
+
+    $this->drupalGet('node/' . $past_and_future_event->id());
+    $this->assertSession()->statusCodeEquals(200, 'The event is not accessible.');
+    $this->assertTrue($past_and_future_event->isPublished(), 'The event status is should be published.');
+
+    // Set up the configuration to unpublish events.
+    $config = \Drupal::configFactory()->getEditable('localgov_expired_events.settings');
+    $config->set('expire_days', 1)
+      ->set('items_per_cron', 3)
+      ->set('action', 'unpublish')
+      ->save();
+
+    // Run cron to process expired events.
+    $this->cronRun();
+
+    // The past event should be unpublished.
+    $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($past_event->id());
+    $this->assertEquals("0", $refreshed_event->get('status')->value, 'Past event status should be unpublished');
+
+    // The future and recurring event remain published.
+    $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($future_event->id());
+    $this->assertEquals("1", $refreshed_event->get('status')->value, 'Future event status should be published');
+    $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($past_and_future_event->id());
+    $this->assertEquals("1", $refreshed_event->get('status')->value, 'Past/future event status should be published');
+
   }
 
 }
