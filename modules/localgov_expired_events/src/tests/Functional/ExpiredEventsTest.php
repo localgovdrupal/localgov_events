@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\localgov_expired_events\Functional;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\workflows\Entity\Workflow;
@@ -261,63 +262,6 @@ class ExpiredEventsTest extends BrowserTestBase {
   }
 
   /**
-   * Create a past event date.
-   */
-  private function getPastDate(): array {
-    $date = new DrupalDateTime('now', 'UTC');
-    $date->modify('midnight');
-    // Set date in the past, allowing for expire_days.
-    $start_date = $date->modify("-2 days")->format('Y-m-d\TH:i:s');
-    $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
-
-    return [
-      'value' => $start_date,
-      'end_value' => $end_date,
-      'rrule' => '',
-      'timezone' => 'UTC',
-    ];
-  }
-
-  /**
-   * Create a future event date.
-   */
-  private function getFutureDate(): array {
-
-    $date = new DrupalDateTime('now', 'UTC');
-    $date->modify('midnight');
-    // Set date in the past, allowing for expire_days.
-    $start_date = $date->modify("+1 days")->format('Y-m-d\TH:i:s');
-    $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
-
-    return [
-      'value' => $start_date,
-      'end_value' => $end_date,
-      'rrule' => '',
-      'timezone' => 'UTC',
-    ];
-  }
-
-  /**
-   * Creates a 10 day recurring event.
-   *
-   * With dates in the past and future.
-   */
-  private function getPastAndFutureDate(): array {
-    $date = new DrupalDateTime('now', 'UTC');
-    $date->modify('midnight');
-    // Set date in the past, allowing for expire_days.
-    $start_date = $date->modify("-2 days")->format('Y-m-d\TH:i:s');
-    $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
-    return [
-      'value' => $start_date,
-      'end_value' => $end_date,
-      'timezone' => 'UTC',
-      'infinite' => 0,
-      'rrule' => 'FREQ=DAILY;COUNT=10',
-    ];
-  }
-
-  /**
    * Tests that an expired event is unpublished.
    *
    * Creates 3 events
@@ -395,6 +339,184 @@ class ExpiredEventsTest extends BrowserTestBase {
     $refreshed_event = \Drupal::entityTypeManager()->getStorage('node')->load($past_and_future_event->id());
     $this->assertEquals("1", $refreshed_event->get('status')->value, 'Past/future event status should be published');
 
+  }
+
+
+
+  /**
+   * Tests cron handling.
+   *
+   * Creates 10 events in the past  
+   * set items_per_cron to 3
+   * runs cron 
+   * test 3 unpublished.
+   */
+  public function testUnpublishCronBatching(): void {
+
+
+    // Create a bunch of event nodes.
+    $count = 10;
+
+    for ($i = 1; $i <= $count; $i++) {
+
+      $past_event = $this->drupalCreateNode([
+      'type' => 'localgov_event',
+      'title' => "Event " . $count,
+      'body' => ["value" => "Event " . $this->randomMachineName(8)],
+      'status' => NodeInterface::PUBLISHED,
+      'localgov_event_date' => $this->getPastDate(),
+      'moderation_state' => 'published',
+      ]);
+      $past_event->save();
+    }
+    // Set up the configuration to unpublish events.
+    $config = \Drupal::configFactory()->getEditable('localgov_expired_events.settings');
+    $config->set('expire_days', 1)
+      ->set('items_per_cron', 3)
+      ->set('action', 'unpublish')
+      ->save();
+
+    // Run cron to process expired events.
+    $this->cronRun();
+
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'localgov_event')
+      ->condition('status', 0)
+      ->execute();   
+
+    //3 should be unpublished.
+    $this->assertEquals(3, count($nids), '3 events should be unpublished.');  
+    
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'localgov_event')
+      ->condition('status', 1)
+      ->execute();  
+      
+    //7 should be unpublished.
+    $this->assertEquals(7, count($nids), '7 events should remain published.');
+
+    // Run cron a 2nd time .
+    $this->cronRun();
+
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'localgov_event')
+      ->condition('status', 0)
+      ->execute();   
+
+    //6 should be unpublished.
+    $this->assertEquals(6, count($nids), '6 events should be unpublished.');  
+    
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'localgov_event')
+      ->condition('status', 1)
+      ->execute();  
+
+    //4 should be unpublished.
+    $this->assertEquals(4, count($nids), '4 events should remain published.');
+
+    // Run cron a 3rd time .
+    $this->cronRun();
+
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'localgov_event')
+      ->condition('status', 0)
+      ->execute();   
+
+    //9 should be unpublished.
+    $this->assertEquals(9, count($nids), '9 events should be unpublished.');  
+    
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'localgov_event')
+      ->condition('status', 1)
+      ->execute();  
+
+    //1 should be unpublished.
+    $this->assertEquals(1, count($nids), '1 events should remain published.');
+
+    // Run cron a 4th time .
+    $this->cronRun();
+
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'localgov_event')
+      ->condition('status', 0)
+      ->execute();   
+
+    //10 should be unpublished.
+    $this->assertEquals(10, count($nids), '10 events should be unpublished.');  
+    
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->condition('type', 'localgov_event')
+      ->condition('status', 1)
+      ->execute();  
+
+    //1 should be unpublished.
+    $this->assertEquals(0, count($nids), '0 events should remain published.');
+
+  }
+
+  /**
+   * Create a past event date.
+   */
+  private function getPastDate(): array {
+    $date = new DrupalDateTime('now', 'UTC');
+    $date->modify('midnight');
+    // Set date in the past, allowing for expire_days.
+    $start_date = $date->modify("-2 days")->format('Y-m-d\TH:i:s');
+    $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
+
+    return [
+      'value' => $start_date,
+      'end_value' => $end_date,
+      'rrule' => '',
+      'timezone' => 'UTC',
+    ];
+  }
+
+  /**
+   * Create a future event date.
+   */
+  private function getFutureDate(): array {
+
+    $date = new DrupalDateTime('now', 'UTC');
+    $date->modify('midnight');
+    // Set date in the past, allowing for expire_days.
+    $start_date = $date->modify("+1 days")->format('Y-m-d\TH:i:s');
+    $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
+
+    return [
+      'value' => $start_date,
+      'end_value' => $end_date,
+      'rrule' => '',
+      'timezone' => 'UTC',
+    ];
+  }
+
+  /**
+   * Creates a 10 day recurring event.
+   *
+   * With dates in the past and future.
+   */
+  private function getPastAndFutureDate(): array {
+    $date = new DrupalDateTime('now', 'UTC');
+    $date->modify('midnight');
+    // Set date in the past, allowing for expire_days.
+    $start_date = $date->modify("-2 days")->format('Y-m-d\TH:i:s');
+    $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
+    return [
+      'value' => $start_date,
+      'end_value' => $end_date,
+      'timezone' => 'UTC',
+      'infinite' => 0,
+      'rrule' => 'FREQ=DAILY;COUNT=10',
+    ];
   }
 
 }

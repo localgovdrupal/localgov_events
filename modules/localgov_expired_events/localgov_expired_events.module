@@ -72,10 +72,15 @@ function localgov_expired_events_cron(): void {
 
     // Exclude expired events from ongoing or future set of events.
     $pastEventsQuery->condition('dr2.localgov_event_date_end_value', $futureEventQuery, 'AND entity_id NOT IN');
+
+    // join to node_field_data to get only published status.
+    $pastEventsQuery->join('node_field_data', 'nfd', 'dr2.entity_id = nfd.nid AND nfd.status = :status', array(':status' => 1));
+
     if ($items_per_cron > 0) {
       $pastEventsQuery->range(0, $items_per_cron);
     }
 
+    // @todo find a way to get the node_field_data table name dynamically.
     $eventsOnlyInThePast = $pastEventsQuery->execute()->fetchAll();
 
     // Loop through returned record.
