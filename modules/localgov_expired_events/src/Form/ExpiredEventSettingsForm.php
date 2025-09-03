@@ -56,7 +56,7 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'localgov_expried_events.settings',
+      'localgov_expired_events.settings',
     ];
   }
 
