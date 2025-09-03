@@ -11,7 +11,7 @@ use Drupal\date_recur\DateRecurOccurrences;
 
 /**
  * @file
- * Contains localgove_expired_events.module.
+ * Contains localgov_expired_events.module.
  */
 
 /**
