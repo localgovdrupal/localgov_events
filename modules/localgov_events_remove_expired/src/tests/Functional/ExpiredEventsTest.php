@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\localgov_expired_events\Functional;
+namespace Drupal\Tests\localgov_events_remove_expired\Functional;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\NodeInterface;
@@ -13,7 +13,7 @@ use Drupal\workflows\Entity\Workflow;
 /**
  * Confirm the module's date functionality works with expired events.
  *
- * @group localgov_expired_events
+ * @group localgov_events_remove_expired
  */
 class ExpiredEventsTest extends BrowserTestBase {
 
@@ -85,7 +85,7 @@ class ExpiredEventsTest extends BrowserTestBase {
    */
   protected static $modules = [
     'field_ui',
-    'localgov_expired_events',
+    'localgov_events_remove_expired',
     'localgov_events',
     'node',
     'date_recur',
@@ -165,7 +165,7 @@ class ExpiredEventsTest extends BrowserTestBase {
     $this->assertTrue($past_and_future_event->isPublished(), 'The event status is should be published.');
 
     // Set up the configuration to unpublish events.
-    $config = \Drupal::configFactory()->getEditable('localgov_expired_events.settings');
+    $config = \Drupal::configFactory()->getEditable('localgov_events_remove_expired.settings');
     $config->set('expire_days', 1)
       ->set('items_per_cron', 3)
       ->set('action', 'unpublish')
@@ -243,7 +243,7 @@ class ExpiredEventsTest extends BrowserTestBase {
     $this->assertTrue($past_and_future_event->isPublished(), 'The event status is should be published.');
 
     // Set up the configuration to delete events.
-    $config = \Drupal::configFactory()->getEditable('localgov_expired_events.settings');
+    $config = \Drupal::configFactory()->getEditable('localgov_events_remove_expired.settings');
     $config->set('expire_days', 1)
       ->set('items_per_cron', 3)
       ->set('action', 'delete')
@@ -320,7 +320,7 @@ class ExpiredEventsTest extends BrowserTestBase {
     $this->assertTrue($past_and_future_event->isPublished(), 'The event status is should be published.');
 
     // Set up the configuration to unpublish events.
-    $config = \Drupal::configFactory()->getEditable('localgov_expired_events.settings');
+    $config = \Drupal::configFactory()->getEditable('localgov_events_remove_expired.settings');
     $config->set('expire_days', 1)
       ->set('items_per_cron', 3)
       ->set('action', 'unpublish')
@@ -370,7 +370,7 @@ class ExpiredEventsTest extends BrowserTestBase {
       $past_event->save();
     }
     // Set up the configuration to unpublish events.
-    $config = \Drupal::configFactory()->getEditable('localgov_expired_events.settings');
+    $config = \Drupal::configFactory()->getEditable('localgov_events_remove_expired.settings');
     $config->set('expire_days', 1)
       ->set('items_per_cron', 3)
       ->set('action', 'unpublish')

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_expired_events\Form;
+namespace Drupal\localgov_events_remove_expired\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -14,7 +14,7 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'localgov_expired_events_form';
+    return 'localgov_events_remove_expired_form';
   }
 
   /**
@@ -29,23 +29,22 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
       '#options' => [
         'none' => $this->t('None'),
         'unpublish' => $this->t('Unpublish'),
-        // 'archived' => $this->t('Archived'),
         'delete' => $this->t('Delete'),
       ],
-      '#config_target' => 'localgov_expired_events.settings:action',
+      '#config_target' => 'localgov_events_remove_expired.settings:action',
     ];
 
     $form['expire_days'] = [
       '#type' => 'textfield',
       '#title' => $this->t('How many days will event be unpublished or deleted after expired ?'),
       '#description' => $this->t('Set 0 to delete or unpublished events right after events are expired.'),
-      '#config_target' => 'localgov_expired_events.settings:expire_days',
+      '#config_target' => 'localgov_events_remove_expired.settings:expire_days',
     ];
 
     $form['items_per_cron'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Number of items processed per cron run:'),
-      '#config_target' => 'localgov_expired_events.settings:items_per_cron',
+      '#config_target' => 'localgov_events_remove_expired.settings:items_per_cron',
     ];
 
     return parent::buildForm($form, $form_state);
@@ -56,7 +55,7 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'localgov_expired_events.settings',
+      'localgov_events_remove_expired.settings',
     ];
   }
 
