@@ -341,18 +341,15 @@ class ExpiredEventsTest extends BrowserTestBase {
 
   }
 
-
-
   /**
    * Tests cron handling.
    *
-   * Creates 10 events in the past  
+   * Creates 10 events in the past
    * set items_per_cron to 3
-   * runs cron 
+   * runs cron
    * test 3 unpublished.
    */
   public function testUnpublishCronBatching(): void {
-
 
     // Create a bunch of event nodes.
     $count = 10;
@@ -360,12 +357,12 @@ class ExpiredEventsTest extends BrowserTestBase {
     for ($i = 1; $i <= $count; $i++) {
 
       $past_event = $this->drupalCreateNode([
-      'type' => 'localgov_event',
-      'title' => "Event " . $count,
-      'body' => ["value" => "Event " . $this->randomMachineName(8)],
-      'status' => NodeInterface::PUBLISHED,
-      'localgov_event_date' => $this->getPastDate(),
-      'moderation_state' => 'published',
+        'type' => 'localgov_event',
+        'title' => "Event " . $count,
+        'body' => ["value" => "Event " . $this->randomMachineName(8)],
+        'status' => NodeInterface::PUBLISHED,
+        'localgov_event_date' => $this->getPastDate(),
+        'moderation_state' => 'published',
       ]);
       $past_event->save();
     }
@@ -383,18 +380,18 @@ class ExpiredEventsTest extends BrowserTestBase {
       ->accessCheck(FALSE)
       ->condition('type', 'localgov_event')
       ->condition('status', 0)
-      ->execute();   
+      ->execute();
 
-    //3 should be unpublished.
-    $this->assertEquals(3, count($nids), '3 events should be unpublished.');  
-    
+    // 3 should be unpublished.
+    $this->assertEquals(3, count($nids), '3 events should be unpublished.');
+
     $nids = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
       ->condition('type', 'localgov_event')
       ->condition('status', 1)
-      ->execute();  
-      
-    //7 should be unpublished.
+      ->execute();
+
+    // 7 should be unpublished.
     $this->assertEquals(7, count($nids), '7 events should remain published.');
 
     // Run cron a 2nd time .
@@ -404,18 +401,18 @@ class ExpiredEventsTest extends BrowserTestBase {
       ->accessCheck(FALSE)
       ->condition('type', 'localgov_event')
       ->condition('status', 0)
-      ->execute();   
+      ->execute();
 
-    //6 should be unpublished.
-    $this->assertEquals(6, count($nids), '6 events should be unpublished.');  
-    
+    // 6 should be unpublished.
+    $this->assertEquals(6, count($nids), '6 events should be unpublished.');
+
     $nids = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
       ->condition('type', 'localgov_event')
       ->condition('status', 1)
-      ->execute();  
+      ->execute();
 
-    //4 should be unpublished.
+    // 4 should be unpublished.
     $this->assertEquals(4, count($nids), '4 events should remain published.');
 
     // Run cron a 3rd time .
@@ -425,18 +422,18 @@ class ExpiredEventsTest extends BrowserTestBase {
       ->accessCheck(FALSE)
       ->condition('type', 'localgov_event')
       ->condition('status', 0)
-      ->execute();   
+      ->execute();
 
-    //9 should be unpublished.
-    $this->assertEquals(9, count($nids), '9 events should be unpublished.');  
-    
+    // 9 should be unpublished.
+    $this->assertEquals(9, count($nids), '9 events should be unpublished.');
+
     $nids = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
       ->condition('type', 'localgov_event')
       ->condition('status', 1)
-      ->execute();  
+      ->execute();
 
-    //1 should be unpublished.
+    // 1 should be unpublished.
     $this->assertEquals(1, count($nids), '1 events should remain published.');
 
     // Run cron a 4th time .
@@ -446,18 +443,18 @@ class ExpiredEventsTest extends BrowserTestBase {
       ->accessCheck(FALSE)
       ->condition('type', 'localgov_event')
       ->condition('status', 0)
-      ->execute();   
+      ->execute();
 
-    //10 should be unpublished.
-    $this->assertEquals(10, count($nids), '10 events should be unpublished.');  
-    
+    // 10 should be unpublished.
+    $this->assertEquals(10, count($nids), '10 events should be unpublished.');
+
     $nids = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
       ->condition('type', 'localgov_event')
       ->condition('status', 1)
-      ->execute();  
+      ->execute();
 
-    //1 should be unpublished.
+    // 1 should be unpublished.
     $this->assertEquals(0, count($nids), '0 events should remain published.');
 
   }
@@ -487,7 +484,7 @@ class ExpiredEventsTest extends BrowserTestBase {
 
     $date = new DrupalDateTime('now', 'UTC');
     $date->modify('midnight');
-    // Set date in the past, allowing for expire_days.
+    // Set date in the future.
     $start_date = $date->modify("+1 days")->format('Y-m-d\TH:i:s');
     $end_date = $date->modify("+2 hours")->format('Y-m-d\TH:i:s');
 

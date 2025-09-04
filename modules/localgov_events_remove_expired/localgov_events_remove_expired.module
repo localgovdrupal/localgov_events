@@ -68,15 +68,15 @@ function localgov_events_remove_expired_cron(): void {
     $pastEvents = $database->select($occurrenceTableName, 'dr2')
       ->distinct(TRUE)
       ->fields('dr2', ['entity_id'])
-      ->condition("dr2.localgov_event_date_end_value", $expiration_date, "<"); 
+      ->condition("dr2.localgov_event_date_end_value", $expiration_date, "<");
 
-    // Exclude ongoing/future set of events 
-    // so that we only get events which are 
+    // Exclude ongoing/future set of events
+    // so that we only get events which are
     // entirely in the past.
     $pastEvents->condition('dr2.entity_id', $ongoingOrFutureEvents, 'NOT IN');
 
-    // join to node_field_data to get only published status.
-    $pastEvents->join('node_field_data', 'nfd', 'dr2.entity_id = nfd.nid AND nfd.status = 1'); 
+    // Join to node_field_data to get only published status.
+    $pastEvents->join('node_field_data', 'nfd', 'dr2.entity_id = nfd.nid AND nfd.status = 1');
 
     if ($items_per_cron > 0) {
       $pastEvents->range(0, $items_per_cron);
