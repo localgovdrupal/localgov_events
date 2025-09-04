@@ -92,9 +92,8 @@ function localgov_events_remove_expired_cron(): void {
 
         // Are we doing a straight delete?
         if ($action == 'delete') {
-          $entityToDelete = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
           $entity->delete();
-          \Drupal::logger('localgov_events_remove_expired')->info('The status of event id = @id has been deleted.', ['@id' => $entityToDelete]);
+          \Drupal::logger('localgov_events_remove_expired')->info('The status of event id = @id has been deleted.', ['@id' => $entity->id()]);
         }
         elseif ($action == 'unpublish') {
 

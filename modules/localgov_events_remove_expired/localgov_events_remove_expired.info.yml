@@ -1,4 +1,4 @@
-name: LocalGov remove expired events
+name: LocalGov Events remove expired
 description: Archive/Unpublished or delete expired events when cron is excuted.
 package: LocalGov Drupal
 type: module
