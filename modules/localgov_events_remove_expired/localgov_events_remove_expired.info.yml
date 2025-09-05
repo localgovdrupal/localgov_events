@@ -4,4 +4,4 @@ package: LocalGov Drupal
 type: module
 core_version_requirement: ^9 || ^10 ||  ^11
 dependencies:
-- localgov_events:localgov_events
+  - localgov_events:localgov_events
