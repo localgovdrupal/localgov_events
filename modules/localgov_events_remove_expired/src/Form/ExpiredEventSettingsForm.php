@@ -23,11 +23,13 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
+    $form['markup_intro'] = ['#markup' => $this->t('<p><strong>Action to take on events after they expire</strong></p>')];
+
     $form['action'] = [
       '#type' => 'radios',
-      '#title' => $this->t('Action after Events are expired:'),
+      '#title' => $this->t('When events have expired:'),
       '#options' => [
-        'none' => $this->t('None'),
+        'none' => $this->t('Do nothing'),
         'unpublish' => $this->t('Unpublish'),
         'delete' => $this->t('Delete'),
       ],
@@ -36,14 +38,15 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
 
     $form['expire_days'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('How many days will event be unpublished or deleted after expired ?'),
-      '#description' => $this->t('Set 0 to delete or unpublished events right after events are expired.'),
+      '#title' => $this->t('How many days after events expire should action be taken?'),
+                            
+      '#description' => $this->t('Enter zero (0) to take action immediately after events expire'),
       '#config_target' => 'localgov_events_remove_expired.settings:expire_days',
     ];
 
     $form['items_per_cron'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Number of items processed per cron run:'),
+      '#title' => $this->t('The events will be processed in batches by a cron run. How many events in a batch?'),
       '#config_target' => 'localgov_events_remove_expired.settings:items_per_cron',
     ];
 
