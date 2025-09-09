@@ -1,0 +1,4 @@
+administer expired events:
+  title: 'Administer expired events'
+  description: 'Admin page for expired event - /admin/config/content/expired-events'
+  restrict access: TRUE

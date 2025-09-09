@@ -4,4 +4,4 @@ localgov_events_remove_expired.form:
     _form: '\Drupal\localgov_events_remove_expired\Form\ExpiredEventSettingsForm'
     _title: 'Expired Event Settings'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'administer expired events'
