@@ -66,15 +66,14 @@ class PermissionsTest extends BrowserTestBase {
     'localgov_events_remove_expired',
   ];
 
-
   /**
    * Test access permissions.
    */
   public function testConfigformUserAccess() {
-  
+
     // Check that anonymous user cannot access to the configuration page.
     $this->drupalGet('/admin/config/content/expired-events');
-    $this->assertSession()->statusCodeEquals(Response::HTTP_FORBIDDEN); 
+    $this->assertSession()->statusCodeEquals(Response::HTTP_FORBIDDEN);
 
     $normalAdminUser = $this->createUser(['access administration pages']);
     $this->drupalLogin($normalAdminUser);
@@ -89,4 +88,5 @@ class PermissionsTest extends BrowserTestBase {
     $this->drupalGet('/admin/config/content/expired-events');
     $this->assertSession()->statusCodeEquals(Response::HTTP_OK);
   }
+
 }

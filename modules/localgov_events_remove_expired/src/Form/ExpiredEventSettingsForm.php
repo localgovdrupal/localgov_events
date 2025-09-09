@@ -39,7 +39,7 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
     $form['expire_days'] = [
       '#type' => 'textfield',
       '#title' => $this->t('How many days after events expire should action be taken?'),
-                            
+
       '#description' => $this->t('Enter zero (0) to take action immediately after events expire'),
       '#config_target' => 'localgov_events_remove_expired.settings:expire_days',
     ];
