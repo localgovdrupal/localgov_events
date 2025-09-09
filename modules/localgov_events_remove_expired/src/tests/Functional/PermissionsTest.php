@@ -69,7 +69,7 @@ class PermissionsTest extends BrowserTestBase {
   /**
    * Test access permissions.
    */
-  public function testConfigformUserAccess() {
+  public function testConfigformUserAccess(): void {
 
     // Check that anonymous user cannot access to the configuration page.
     $this->drupalGet('/admin/config/content/expired-events');
