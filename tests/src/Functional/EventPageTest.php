@@ -82,6 +82,7 @@ class EventPageTest extends BrowserTestBase {
   protected static $modules = [
     'field_ui',
     'localgov_events',
+    'localgov_media_test_config',
   ];
 
   /**

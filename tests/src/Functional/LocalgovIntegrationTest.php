@@ -100,6 +100,7 @@ class LocalgovIntegrationTest extends BrowserTestBase {
     'localgov_events',
     'localgov_search',
     'localgov_search_db',
+    'localgov_media_test_config',
   ];
 
   /**
