@@ -1,0 +1,3 @@
+action: none
+expire_days: 30
+items_per_cron: 100
