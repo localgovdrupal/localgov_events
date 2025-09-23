@@ -34,7 +34,7 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
         'delete' => $this->t('Delete'),
       ],
       '#config_target' => 'localgov_events_remove_expired.settings:action',
-      '#description' => 'Warning: deleted events are removed from the database and may not be recoverable.',
+      '#description' => $this->t('Warning: deleted events are removed from the database and may not be recoverable.'),
     ];
 
     $form['expire_days'] = [
