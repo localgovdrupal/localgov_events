@@ -58,6 +58,12 @@ function localgov_events_remove_expired_cron(): void {
     $fieldStorageDefinitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('node');
     $occurrenceTableName = DateRecurOccurrences::getOccurrenceCacheStorageTableName($fieldStorageDefinitions['localgov_event_date']);
 
+
+    // WE need to interogate the database here, because there isn't a way (as far as we can tell)
+    // of using an entity query to load events with their recurring date instances, we just get rrules
+    // we need to query the date_recur occurrences table directly and join that to the node table.
+    // @see Drupal\date_recur\Plugin\views\filter\DateRecurFilter; 
+    
     // Get the set of events that are ongoing or future.
     $ongoingOrFutureEvents = $database->select($occurrenceTableName, 'dr')
       ->distinct(TRUE)
