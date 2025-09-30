@@ -21,7 +21,7 @@ function localgov_events_remove_expired_cron(): void {
 
   // @todo set config default values for expire_days, items_per_cron and action.
   $config = \Drupal::config('localgov_events_remove_expired.settings');
-  $noOfDaysToExpire = $config->get('expire_days');
+  $noOfDaysInExpiryPeriod = $config->get('expire_days');
   $items_per_cron = $config->get('items_per_cron');
   $action = $config->get('action');
 
@@ -30,9 +30,9 @@ function localgov_events_remove_expired_cron(): void {
     $date = new DrupalDateTime('now', 'UTC');
     $date->modify('midnight');
     // Increase the date by the number of days to expire.
-    $date->modify("+$noOfDaysToExpire days");
+    $date->modify("-$noOfDaysInExpiryPeriod days");
     // Format the date to match the database format.
-    $expiration_date = $date->format('Y-m-d\TH:i:s');
+    $lastDayBeforeExpiry = $date->format('Y-m-d\TH:i:s');
 
     $database = \Drupal::database();
 
@@ -58,7 +58,7 @@ function localgov_events_remove_expired_cron(): void {
     $fieldStorageDefinitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('node');
     $occurrenceTableName = DateRecurOccurrences::getOccurrenceCacheStorageTableName($fieldStorageDefinitions['localgov_event_date']);
 
-    // WE need to interogate the database here, because there isn't a way
+    // We need to interrogate the database here, because there isn't a way
     // (as far as we can tell) of using an entity query to load events
     // with their recurring date instances, we just get rrules we need to
     // query the date_recur occurrences table directly and join that to
@@ -68,13 +68,13 @@ function localgov_events_remove_expired_cron(): void {
     $ongoingOrFutureEvents = $database->select($occurrenceTableName, 'dr')
       ->distinct(TRUE)
       ->fields('dr', ['entity_id'])
-      ->condition("dr.localgov_event_date_end_value", $expiration_date, ">=");
+      ->condition("dr.localgov_event_date_end_value", $lastDayBeforeExpiry, ">=");
 
     // Get the set of events that are expired.
     $pastEvents = $database->select($occurrenceTableName, 'dr2')
       ->distinct(TRUE)
       ->fields('dr2', ['entity_id'])
-      ->condition("dr2.localgov_event_date_end_value", $expiration_date, "<");
+      ->condition("dr2.localgov_event_date_end_value", $lastDayBeforeExpiry, "<");
 
     // Exclude ongoing/future set of events
     // so that we only get events which are
