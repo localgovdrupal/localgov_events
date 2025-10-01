@@ -88,7 +88,7 @@ function localgov_events_remove_expired_cron(): void {
       $pastEvents->range(0, $items_per_cron);
     }
 
-    // @todo find a way to get the node_field_data table name dynamically.
+    // Execute the query.
     $eventsOnlyInThePast = $pastEvents->execute()->fetchAll();
 
     // Loop through returned record.
@@ -149,5 +149,4 @@ function localgov_events_remove_expired__set_content_state($content_moderation_s
       $entity->save();
     }
   }
-
 }

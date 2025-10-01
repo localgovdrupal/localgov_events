@@ -41,7 +41,7 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
       '#type' => 'number',
       '#title' => $this->t('How many days after events expire should action be taken?'),
       '#min' => 0,
-      '#step' => 1, 
+      '#step' => 1,
       '#description' => $this->t('The action will take place after midnight following the event end date.'),
       '#config_target' => 'localgov_events_remove_expired.settings:expire_days',
     ];
@@ -50,7 +50,7 @@ class ExpiredEventSettingsForm extends ConfigFormBase {
       '#type' => 'number',
       '#title' => $this->t('The events will be processed in batches by a cron run. How many events in a batch?'),
       '#min' => 0,
-      '#step' => 1, 
+      '#step' => 1,
       '#config_target' => 'localgov_events_remove_expired.settings:items_per_cron',
     ];
 
