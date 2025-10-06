@@ -136,7 +136,7 @@ function localgov_events_remove_expired_cron(): void {
 }
 
 /**
- * Helper function to content state.
+ * Update content moderation state.
  */
 function localgov_events_remove_expired__set_content_state($content_moderation_state, $entity, $state): void {
   // Check if there is workflow applied on the node.
