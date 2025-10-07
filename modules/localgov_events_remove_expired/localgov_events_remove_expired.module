@@ -1,0 +1,151 @@
+<?php
+
+/**
+ * @file
+ * Provides event deletion/archiving support.
+ */
+
+use Drupal\content_moderation\Entity\ContentModerationState;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\date_recur\DateRecurOccurrences;
+
+/**
+ * @file
+ * Contains localgov_events_remove_expired.module.
+ */
+
+/**
+ * Implements hook_cron().
+ */
+function localgov_events_remove_expired_cron(): void {
+
+  $config = \Drupal::config('localgov_events_remove_expired.settings');
+  $noOfDaysInExpiryPeriod = $config->get('expire_days');
+  $items_per_cron = $config->get('items_per_cron');
+  $action = $config->get('action');
+
+  try {
+
+    $date = new DrupalDateTime('now', 'UTC');
+    $date->modify('midnight');
+    // Increase the date by the number of days to expire.
+    $date->modify("-$noOfDaysInExpiryPeriod days");
+    // Format the date to match the database format.
+    $lastDayBeforeExpiry = $date->format('Y-m-d\TH:i:s');
+
+    $database = \Drupal::database();
+
+    // Check that the localgov_event node type exists.
+    $node_type = \Drupal::entityTypeManager()->getStorage('node_type')->load('localgov_event');
+    if (!$node_type) {
+      \Drupal::logger('localgov_events_remove_expired')->error('The localgov_event node type does not exist.');
+      return;
+    }
+    // Check that the localgov_event_date field exists.
+    $fieldDefinitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'localgov_event');
+    if (!isset($fieldDefinitions['localgov_event_date'])) {
+      \Drupal::logger('localgov_events_remove_expired')->error('The localgov_event_date field does not exist on the localgov_event node type.');
+      return;
+    }
+    // Check that the localgov_event_date field is a date_recur field.
+    if ($fieldDefinitions['localgov_event_date']->getType() !== 'date_recur') {
+      \Drupal::logger('localgov_events_remove_expired')->error('The localgov_event_date field is not a date_recur field.');
+      return;
+    }
+
+    // Get the table name for the date_recur occurrences.
+    $fieldStorageDefinitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('node');
+    $occurrenceTableName = DateRecurOccurrences::getOccurrenceCacheStorageTableName($fieldStorageDefinitions['localgov_event_date']);
+
+    // We need to interrogate the database here, because there isn't a way
+    // (as far as we can tell) of using an entity query to load events
+    // with their recurring date instances, we just get rrules we need to
+    // query the date_recur occurrences table directly and join that to
+    // the node table.
+    // @see Drupal\date_recur\Plugin\views\filter\DateRecurFilter;
+    // Get the set of events that are ongoing or future.
+    $ongoingOrFutureEvents = $database->select($occurrenceTableName, 'dr')
+      ->distinct(TRUE)
+      ->fields('dr', ['entity_id'])
+      ->condition("dr.localgov_event_date_end_value", $lastDayBeforeExpiry, ">=");
+
+    // Get the set of events that are expired.
+    $pastEvents = $database->select($occurrenceTableName, 'dr2')
+      ->distinct(TRUE)
+      ->fields('dr2', ['entity_id'])
+      ->condition("dr2.localgov_event_date_end_value", $lastDayBeforeExpiry, "<");
+
+    // Exclude ongoing/future set of events
+    // so that we only get events which are
+    // entirely in the past.
+    $pastEvents->condition('dr2.entity_id', $ongoingOrFutureEvents, 'NOT IN');
+
+    // Join to node_field_data to get only published status.
+    $pastEvents->join('node_field_data', 'nfd', 'dr2.entity_id = nfd.nid AND nfd.status = 1');
+
+    if ($items_per_cron > 0) {
+      $pastEvents->range(0, $items_per_cron);
+    }
+
+    // Execute the query.
+    $eventsOnlyInThePast = $pastEvents->execute()->fetchAll();
+
+    // Loop through returned record.
+    if (!empty($eventsOnlyInThePast)) {
+      foreach ($eventsOnlyInThePast as $record) {
+        $entity = \Drupal::entityTypeManager()->getStorage('node')->load($record->entity_id);
+
+        // Are we doing a straight delete?
+        if ($action == 'delete') {
+          $entity->delete();
+          \Drupal::logger('localgov_events_remove_expired')->info('The status of event id = @id has been deleted.', ['@id' => $entity->id()]);
+        }
+        elseif ($action == 'unpublish') {
+
+          // If content moderation is enabled
+          // and the entity has a moderation state field.
+          // then set the moderation state to 'archived'.
+          $moduleHandler = \Drupal::service('module_handler');
+          if ($moduleHandler->moduleExists('content_moderation') && $entity->hasField('moderation_state')) {
+            $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
+            // In workflow terms unpublished equates to archived.
+            localgov_events_remove_expired__set_content_state($content_moderation_state, $entity, 'archived');
+            \Drupal::logger('localgov_events_remove_expired')->info('The status of event id = @id has been changed to archived.', ['@id' => $entity->id()]);
+          }
+          else {
+            // Handle non content moderation update by unpublishing.
+            $entity->setUnpublished();
+            $entity->save();
+            \Drupal::logger('localgov_events_remove_expired')->info('Event id = @id has been unpublished.', ['@id' => $entity->id()]);
+          }
+        }
+        else {
+          \Drupal::logger('localgov_events_remove_expired')->error('No action has been specified.');
+        }
+      }
+    }
+    else {
+      \Drupal::logger('localgov_events_remove_expired')->info('No expired events found to process.');
+    }
+
+  }
+  catch (Exception $e) {
+    \Drupal::logger('localgov_events_remove_expired')->error($e->getMessage());
+  }
+}
+
+/**
+ * Update content moderation state.
+ */
+function localgov_events_remove_expired__set_content_state($content_moderation_state, $entity, $state): void {
+  // Check if there is workflow applied on the node.
+  // Set the node status to archived.
+  if ($content_moderation_state) {
+    $workflow = $content_moderation_state->get('workflow')->entity;
+    $state_label = $workflow->get('type_settings')['states'];
+    if (in_array($state, array_keys($state_label), $strict = TRUE)) {
+      $entity->set('moderation_state', 'archived');
+      $entity->save();
+    }
+  }
+}

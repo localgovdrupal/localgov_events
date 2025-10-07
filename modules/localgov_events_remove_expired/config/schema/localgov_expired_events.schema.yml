@@ -1,0 +1,21 @@
+localgov_events_remove_expired.settings:
+  type: config_entity
+  label: 'Remove expired events module settings'
+  mapping:
+    action:
+      type: string
+      label: 'Action type'
+    expire_days:
+      type: integer
+      label: 'number of days'
+      constraints:
+        Regex:
+          pattern: '/^[0-9]+$/'
+          message: 'Please enter numbers only'
+    items_per_cron:
+      type: integer
+      label: 'Items per cron'
+      constraints:
+        Regex:
+          pattern: '/^[0-9]+$/'
+          message: 'Please enter numbers only'

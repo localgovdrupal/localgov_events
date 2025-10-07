@@ -1,0 +1,6 @@
+localgov_events_remove_expired.admin.settings:
+  title: 'Expired Events Settings'
+  description: 'Expired events settings'
+  parent: 'system.admin_config_content'
+  route_name: localgov_events_remove_expired.form
+  weight: 100
