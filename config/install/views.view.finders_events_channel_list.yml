@@ -251,8 +251,9 @@ display:
         type: search_api
         options:
           view_modes:
-            'entity:node':
-              localgov_event: finders_results
+            'date_recur:node__finders_events_date':
+              ':default': teaser
+              localgov_event: ':default'
       query:
         type: search_api_query
         options:
@@ -263,6 +264,7 @@ display:
       header: {  }
       footer: {  }
       display_extenders: {  }
+      css_class: 'lgd-teasers lgd-teaser-list'
     cache_metadata:
       max-age: -1
       contexts:
