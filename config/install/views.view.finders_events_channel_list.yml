@@ -264,7 +264,6 @@ display:
       header: {  }
       footer: {  }
       display_extenders: {  }
-      css_class: 'lgd-teasers lgd-teaser-list'
     cache_metadata:
       max-age: -1
       contexts:
