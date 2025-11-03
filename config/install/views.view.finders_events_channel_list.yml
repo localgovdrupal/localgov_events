@@ -251,9 +251,8 @@ display:
         type: search_api
         options:
           view_modes:
-            'date_recur:node__finders_events_date':
-              ':default': teaser
-              localgov_event: ':default'
+            'entity:node':
+              localgov_event: finders_results
       query:
         type: search_api_query
         options:
