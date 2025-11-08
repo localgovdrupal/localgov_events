@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\localgov_events\Form\EventsAddEditCallbacks;
 use Drupal\localgov_roles\RolesHelper;
 use Drupal\views\ViewExecutable;
@@ -294,4 +295,36 @@ function localgov_events_form_node_localgov_event_form_alter(&$form, FormStateIn
 function localgov_events_form_node_localgov_event_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Configure node edit form.
   EventsAddEditCallbacks::configureNodeForm($form);
+}
+
+/**
+ * Implements hook_preprocess_views_view_field().
+ */
+function localgov_events_preprocess_views_view_field(&$variables) {
+  $view = $variables['view'];
+  $field = $variables['field'];
+
+  if ($view->id() === 'localgov_events_listing' && $field->field == 'title') {
+    $date = $view->field['localgov_event_date_value']->getValue($variables['row']);
+
+    $node = $variables['row']->_entity;
+
+    $date_string = \Drupal::service('date.formatter')->format(
+      $date,
+      'long'
+    );
+    $aria_label = $node->get('title')->value . ' - ' . $date_string;
+
+    $link = [
+      '#type' => 'link',
+      '#title' => $node->get('title')->value,
+      '#url' => Url::fromUri($node->toUrl()->toUriString()),
+      '#attributes' => [
+        'hreflang' => $node->get('langcode')->value,
+        'aria-label' => $aria_label,
+      ],
+    ];
+
+    $variables['output'] = $link;
+  }
 }
